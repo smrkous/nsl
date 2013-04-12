@@ -11,3 +11,9 @@
 *.lai
 *.la
 *.a
+NetStalkerLibrary/Debug/*
+NetStalkerLibrary/ipch/*
+NetStalkerLibrary/NetStalkerLibrary.opensdf
+NetStalkerLibrary/NetStalkerLibrary.sdf
+NetStalkerLibrary/NetStalkerLibrary.suo
+NetStalkerLibrary/Release/*

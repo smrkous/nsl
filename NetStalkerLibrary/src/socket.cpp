@@ -7,13 +7,21 @@
 
 namespace nsl {
 
+	unsigned int socketOpenCounter = 0;
+
 	Socket::Socket(void)
 	{
 		socket = 0;
+		if (socketOpenCounter++ == 0) {
+			initializeSockets();
+		}
 	}
 	
 	Socket::~Socket(void)
 	{
+		if (--socketOpenCounter == 0) {
+			shutdownSockets();
+		}
 		close();
 	}
 	
