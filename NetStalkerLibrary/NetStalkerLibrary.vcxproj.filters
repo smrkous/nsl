@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{0c5a4272-b261-4af3-8708-f0a7b18e9eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{1f887fe5-2b59-4275-bbec-d57af3eb0079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\client">
+      <UniqueIdentifier>{52e7bf97-be49-45ed-9f85-e4257a0a8266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\server">
+      <UniqueIdentifier>{e653d000-0581-43a7-b1a3-e7a37da019db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\BitStreamReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BitStreamWriter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nsl.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectClassDefinition.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\socket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\Client.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\ClientImpl.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\ClientObject.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\Connection.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\CustomMessageBuffer.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\HistoryBuffer.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\NetworkObject.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\ObjectManager.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\Connection.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\HistoryBuffer.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\NetworkObject.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\ObjectManager.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\Peer.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\Server.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\ServerImpl.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\ServerObject.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\nsl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nslBitStream.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nslClient.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nslReflexion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nslServer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectClassDefinition.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\socket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client\ClientImpl.h">
+      <Filter>src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client\Connection.h">
+      <Filter>src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client\CustomMessageBuffer.h">
+      <Filter>src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client\HistoryBuffer.h">
+      <Filter>src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client\NetworkObject.h">
+      <Filter>src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client\ObjectManager.h">
+      <Filter>src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\server\Connection.h">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\server\HistoryBuffer.h">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\server\NetworkObject.h">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\server\ObjectManager.h">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\server\Peer.h">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\server\ServerImpl.h">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+</Project>
