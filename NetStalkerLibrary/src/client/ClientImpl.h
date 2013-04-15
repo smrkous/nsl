@@ -4,12 +4,10 @@ namespace nsl {
 	class Client;
 	class ObjectClassDefinition;
 
-	namespace client {
-		enum ObjectSnapshotMeta;
-	};
 };
 
 #include "../common.h"
+#include "NetworkObject.h"
 #include "HistoryBuffer.h"
 #include "ObjectManager.h"
 #include "CustomMessageBuffer.h"
@@ -54,7 +52,7 @@ namespace nsl {
 
 			void registerObjectClass(ObjectClassDefinition* objectClass);
 
-			void open(unsigned short port, const char* address) throw (Exception);
+			void open(unsigned short port, const char* address);
 
 			void close(void);
 

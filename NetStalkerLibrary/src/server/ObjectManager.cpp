@@ -34,7 +34,7 @@ namespace nsl {
 
 				// if object contains no more data, delete it from memmory
 				if (o->getDestroyIndex() == bufferIndex) {
-					it = objects.erase(it);
+					objects.erase(it++);
 					delete o;
 					continue;
 				}

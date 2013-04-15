@@ -6,7 +6,7 @@ namespace nsl {
 };
 
 #include "../common.h"
-#include "../socket.h"
+#include "../Socket.h"
 
 namespace nsl {
 	namespace client {

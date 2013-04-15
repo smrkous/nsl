@@ -58,9 +58,9 @@ namespace nsl {
 			PeerConnection* peer;
 			UpdateCode code;
 			BitStreamReader* stream;
-			while (UpdateCode::EMPTY != (code = connection.update(peer, stream, currentTime))) {
+			while (EMPTY != (code = connection.update(peer, stream, currentTime))) {
 				switch(code) {
-					case UpdateCode::PEER_CONNECT:
+					case PEER_CONNECT:
 					{
 						Peer* newPeer = new Peer(peer);
 						connectedPeers.insert(std::pair<unsigned int, Peer*>(peer->connectionId, newPeer));
@@ -72,7 +72,7 @@ namespace nsl {
 						delete stream;
 						break;
 					}
-					case UpdateCode::PEER_DISCONNECT:
+					case PEER_DISCONNECT:
 					{
 						std::map<unsigned int, Peer*>::iterator it = connectedPeers.find(peer->connectionId);
 						Peer* oldPeer = it->second;
@@ -82,7 +82,7 @@ namespace nsl {
 						delete stream;
 						break;
 					}
-					case UpdateCode::PEER_UPDATE:
+					case PEER_UPDATE:
 					{
 						std::map<unsigned int, Peer*>::iterator it = connectedPeers.find(peer->connectionId);
 						Peer* currentPeer = it->second;
@@ -160,7 +160,7 @@ namespace nsl {
 					seqNumber ack = peer->getLastAck();
 					if (!historyBuffer.isSeqInBounds(ack)) {
 						userObject->onClientDisconnect(peer->getPeerConnection()->connectionId);
-						it = connectedPeers.erase(it);
+						connectedPeers.erase(it++);
 						delete peer;
 						continue;
 					}

@@ -184,7 +184,7 @@ namespace nsl {
 					peer = timeoutIterator->second;
 					if (peer->lastResponse + NSL_TIMEOUT_SERVER_HANDSHAKE_KILL < time) {
 						sendDisconnect(peer->connectedAddress, peer->connectionId);
-						timeoutIterator = handshakingPeers.erase(timeoutIterator);
+						handshakingPeers.erase(timeoutIterator++);
 						return peer;
 					}
 					if (peer->lastResponse + NSL_TIMEOUT_SERVER_HANDSHAKE_RESEND < time) {
@@ -203,7 +203,7 @@ namespace nsl {
 					peer = timeoutIterator->second;
 					if (peer->lastResponse + NSL_TIMEOUT_SERVER_CONNECTED_KILL < time) {
 						sendDisconnect(peer->connectedAddress, peer->connectionId);
-						timeoutIterator = connectedPeers.erase(timeoutIterator);
+						connectedPeers.erase(timeoutIterator++);
 						return peer;
 					}
 					timeoutIterator++;

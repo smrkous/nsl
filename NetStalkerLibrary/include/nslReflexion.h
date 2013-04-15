@@ -120,7 +120,7 @@ namespace nsl {
 	template <class T>
 	void ObjectClass::defineAttribute(unsigned int attrId) {
 		AttributeDefinition a;
-		a.interpolationFunction = (typename T::isInterpolated() ? (abstractInterpolationFunction)typename T::defaultInterpolation : NULL);
+		a.interpolationFunction = (typename T::isInterpolated() ? (abstractInterpolationFunction)(T::defaultInterpolation) : NULL);
 		a.size = typename T::getByteSize();
 		a.identifier = attrId;
 		attributes.push_back(a);

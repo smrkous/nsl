@@ -75,7 +75,7 @@ namespace nsl {
 
 		void NetworkObject::findInterpolationPoints(HistoryBuffer* historyBuffer, int applicationIndex, double applicationTime)
 		{
-			if (getStateBySeqIndex(applicationIndex) == ObjectSnapshotMeta::EMPTY) {
+			if (getStateBySeqIndex(applicationIndex) == EMPTY) {
 				// no points required, object is inaccessible from application
 				return;
 			}

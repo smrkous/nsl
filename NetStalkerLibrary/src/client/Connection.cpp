@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include "Connection.h"
 #include "../../include/nslBitStream.h"
 

@@ -84,7 +84,7 @@ namespace nsl {
 		/// This operation is non-blocking, so the connection won't open immediately.
 		/// Try to updateNetwork() until true is received or until you decide to close().
 		NSL_IMPORT_EXPORT
-		void open(unsigned short port, const char* address) throw (Exception);
+		void open(unsigned short port, const char* address);
 
 		/// Close the connection.
 		NSL_IMPORT_EXPORT

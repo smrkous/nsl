@@ -1,3 +1,5 @@
+
+#include <string.h>
 #include "../include/nslBitStream.h"
 
 namespace nsl {

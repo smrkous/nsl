@@ -43,13 +43,13 @@ namespace nsl {
 						
 						ObjectSnapshotMeta currentState = it->second->getStateBySeqIndex(currentIndex);
 						// if there are no data for this object in this seq, no scheduled operations are about to happen
-						if (currentState == ObjectSnapshotMeta::EMPTY) {
+						if (currentState == EMPTY) {
 							continue;
 						}
 						
 						ObjectSnapshotMeta previousState = (
 							previousIndex == NSL_UNDEFINED_BUFFER_INDEX ? 
-							ObjectSnapshotMeta::EMPTY : 
+							EMPTY :
 							it->second->getStateBySeqIndex(previousIndex)
 						);
 						
@@ -58,26 +58,26 @@ namespace nsl {
 						// death / birth zalezi vzdy na meta
 
 						switch (previousState) {
-						case ObjectSnapshotMeta::UPDATED:
-						case ObjectSnapshotMeta::CREATED:
-							if (currentState == ObjectSnapshotMeta::DESTROYED || 
-								currentState == ObjectSnapshotMeta::CREATED_AND_DESTROYED ||
-								currentState == ObjectSnapshotMeta::EMPTY) {
+						case UPDATED:
+						case CREATED:
+							if (currentState == DESTROYED ||
+								currentState == CREATED_AND_DESTROYED ||
+								currentState == EMPTY) {
 								destroy = true;
 							}
 							break;
-						case ObjectSnapshotMeta::DESTROYED:
-						case ObjectSnapshotMeta::EMPTY:
+						case DESTROYED:
+						case EMPTY:
 							// alias updated, created or created_and_destroyed
-							if (currentState != ObjectSnapshotMeta::DESTROYED && currentState != ObjectSnapshotMeta::EMPTY) {
+							if (currentState != DESTROYED && currentState != EMPTY) {
 								create = true;
 							}
-							if (currentState == ObjectSnapshotMeta::CREATED_AND_DESTROYED) {
+							if (currentState == CREATED_AND_DESTROYED) {
 								destroy = true;
 							}
 							break;
-						case ObjectSnapshotMeta::CREATED_AND_DESTROYED:
-							if (currentState == ObjectSnapshotMeta::CREATED || ObjectSnapshotMeta::UPDATED) {
+						case CREATED_AND_DESTROYED:
+							if (currentState == CREATED || UPDATED) {
 								create = true;
 							}
 							break;
@@ -117,7 +117,7 @@ namespace nsl {
 
 				if (data != NULL) {
 					delete[] data;
-					o->setDataBySeqIndex(bufferIndex, NULL, ObjectSnapshotMeta::EMPTY);
+					o->setDataBySeqIndex(bufferIndex, NULL, EMPTY);
 				}
 			}
 		}
@@ -134,7 +134,7 @@ namespace nsl {
 
 				do {
 					ObjectSnapshotMeta state = it->second->getStateBySeqIndex(currentIndex);
-					if (state != ObjectSnapshotMeta::EMPTY) {
+					if (state != EMPTY) {
 						notUseful = false;
 						break;
 					}
@@ -143,10 +143,10 @@ namespace nsl {
 
 				if (notUseful) {
 					NetworkObject* o = it->second;
-					it = objects.erase(it);
+					objects.erase(it++);
 					delete o;
 				} else {
-					it++;
+					++it;
 				}
 			}
 		}

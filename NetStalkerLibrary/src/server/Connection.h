@@ -6,7 +6,7 @@ namespace nsl {
 };
 
 #include "../common.h"
-#include "../socket.h"
+#include "../Socket.h"
 #include <map>
 
 namespace nsl {

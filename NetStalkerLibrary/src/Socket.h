@@ -48,6 +48,6 @@ namespace nsl {
 		bool isOpen(void) const;
 		bool send( const sockaddr_in destination, const void * data, int size );
 		//bool broadcast( const void * data, int size );
-		int receive( sockaddr_in& sender, void * data, int size );	
+		int receive( sockaddr_in& sender, void * data, int size );
 	};
 };

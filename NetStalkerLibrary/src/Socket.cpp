@@ -1,5 +1,5 @@
 // platform detection
-#include "socket.h"
+#include "Socket.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -16,7 +16,7 @@ namespace nsl {
 			initializeSockets();
 		}
 	}
-	
+
 	Socket::~Socket(void)
 	{
 		if (--socketOpenCounter == 0) {
@@ -24,11 +24,11 @@ namespace nsl {
 		}
 		close();
 	}
-	
+
 	bool Socket::open( unsigned short port )
 	{
 		assert( !isOpen() );
-		
+
 		// create socket
 
 		socket = ::socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
@@ -46,7 +46,7 @@ namespace nsl {
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = INADDR_ANY;
 		address.sin_port = htons( (unsigned short) port );
-		
+
 		if ( bind( socket, (const sockaddr*) &address, sizeof(sockaddr_in) ) < 0 )
 		{
 			socket = 0;
@@ -69,24 +69,24 @@ namespace nsl {
 				close();
 				return false;
 				//throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: failed to set non-blocking socket" );
-			}		
-		
+			}
+
 
 		return true;
 	}
-	
+
 	void Socket::close()
 	{
 		if ( socket != 0 )
 		{
 			#ifdef PLATFORM_WINDOWS
 			closesocket( socket );
-			#elif
-			close( socket );
+			#else
+			::close( socket );
 			#endif
 		}
 	}
-	
+
 	bool Socket::isOpen() const
 	{
 		return socket != 0;
@@ -100,7 +100,7 @@ namespace nsl {
 	{
 		assert( data );
 		assert( size > 0 );
-		
+
 		if ( socket == 0 )
 			return false;
 
@@ -112,19 +112,19 @@ namespace nsl {
 
 		return sent_bytes == size;
 	}
-	
+
 	int Socket::receive( sockaddr_in& sender, void * data, int size )
 	{
 		assert( data );
 		assert( size > 0 );
-		
+
 		if ( socket == 0 )
 			return false;
-			
+
 		#ifdef PLATFORM_WINDOWS
 		typedef int socklen_t;
 		#endif
-			
+
 		sockaddr_in from;
 		socklen_t fromLength = sizeof( from );
 

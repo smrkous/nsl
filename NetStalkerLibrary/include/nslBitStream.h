@@ -33,7 +33,7 @@ namespace nsl {
 		unsigned char bitOffset; // the first unread bit in a byte (0-7)
 
 		bool isSpaceFor(unsigned int bitCount);
-		void checkSpace(unsigned int bitCount) throw (Exception);
+		void checkSpace(unsigned int bitCount);
 	public:
 
 		/// Creates BitStream operating over external buffer
@@ -50,15 +50,15 @@ namespace nsl {
 
 		/// Read single bit from the stream. If the stream contains no more data, exception is thrown.
 		NSL_IMPORT_EXPORT
-		bool readBit(void) throw (Exception);
+		bool readBit(void);
 
 		/// Read single byte from the stream. If the stream contains no more data, exception is thrown.
 		NSL_IMPORT_EXPORT
-		byte readByte(void) throw (Exception);
+		byte readByte(void);
 
 		/// Read defined attribute from the stream. If the stream contains no more data, exception is thrown.
 		template<class T> NSL_IMPORT_EXPORT
-		typename T::Type read(void) throw (Exception) {typename T::Type value; read(typename T::getByteSize(), (byte *)(&value)); return value;};
+		typename T::Type read(void) throw (Exception) {typename T::Type value; read(T::getByteSize(), (byte *)(&value)); return value;};
 
 		/// Read raw data from the stream. If the stream contains no more data, exception is thrown.
 		NSL_IMPORT_EXPORT
@@ -126,15 +126,15 @@ namespace nsl {
 
 		/// Write single bit into the stream. If the buffer is external and overflows, exception is thrown.
 		NSL_IMPORT_EXPORT
-		void writeBit(bool) throw (Exception);
+		void writeBit(bool);
 
 		/// Write single byte into the stream. If the buffer is external and overflows, exception is thrown.
 		NSL_IMPORT_EXPORT
-		void writeByte(byte) throw (Exception);
+		void writeByte(byte);
 		
 		/// Write defined attribute into the stream. If the buffer is external and overflows, exception is thrown.
 		template<class T> NSL_IMPORT_EXPORT
-		void write(typename T::Type value) throw (Exception) {write(typename T::getByteSize(), (byte *)(&value));}
+		void write(typename T::Type value) throw (Exception) {write(T::getByteSize(), (byte *)(&value));}
 
 		/// Write raw data into the stream. If the buffer is external and overflows, exception is thrown.
 		NSL_IMPORT_EXPORT

@@ -17,7 +17,7 @@ namespace nsl {
 			#define NSL_IMPORT_EXPORT __declspec(dllimport)
 		#endif
 	#else
-		#define NS_IMPORT_EXPORT
+		#define NSL_IMPORT_EXPORT
 	#endif
 
 

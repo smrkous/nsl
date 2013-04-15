@@ -16,6 +16,14 @@ namespace nsl {
 	#endif
 
 	/* Endianity recognition */
+	/* gcc way */
+	#if !defined(NSL_BIG_ENDIAN) && !defined(NSL_LITTLE_ENDIAN) && defined(__BYTE_ORDER__)
+		#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+			#define NSL_LITTLE_ENDIAN
+		#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+			#define NSL_BIG_ENDIAN
+		#endif
+	#endif
 
 	#if !defined(NSL_BIG_ENDIAN) && !defined(NSL_LITTLE_ENDIAN)
 		#if defined(_M_IX86) || defined(i386)

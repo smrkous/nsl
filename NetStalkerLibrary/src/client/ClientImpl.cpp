@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cmath>
 #include "ClientImpl.h"
 #include "../../include/nslBitStream.h"
 #include "NetworkObject.h"
@@ -96,7 +98,7 @@ namespace nsl {
 					double timeOverlapDiff = optimalApplicationTime - currentTime - timeOverlap;
 
 					// limit the difference by maximal speedup / slowdown
-					double step = min(abs(timeOverlapDiff), (currentTime - lastUpdateTime) * (1 - NSL_MAXIMAL_SPEEDUP));
+					double step = std::min(std::abs(timeOverlapDiff), (currentTime - lastUpdateTime) * (1 - NSL_MAXIMAL_SPEEDUP));
 
 					// alter the timeOverlap
 					timeOverlap += (timeOverlap < 0) ? -step : step;
@@ -250,7 +252,7 @@ namespace nsl {
 					}
 
 					objectManager.addObjectToPacket(seqIndex, object);
-					object->setDataBySeqIndex(seqIndex, newData, ObjectSnapshotMeta::UPDATED);
+					object->setDataBySeqIndex(seqIndex, newData, UPDATED);
 					break;
 
 				case NSL_OBJECT_FLAG_DELETE:
@@ -261,7 +263,7 @@ namespace nsl {
 						newData[i] ^= ackData[i];
 					}
 					
-					object->setDataBySeqIndex(seqIndex, newData, ObjectSnapshotMeta::DESTROYED);
+					object->setDataBySeqIndex(seqIndex, newData, DESTROYED);
 					break;
 
 				case NSL_OBJECT_FLAG_OUT_OF_SCOPE:
@@ -272,7 +274,7 @@ namespace nsl {
 						newData[i] ^= ackData[i];
 					}
 					
-					object->setDataBySeqIndex(seqIndex, newData, ObjectSnapshotMeta::DESTROYED, false, true);
+					object->setDataBySeqIndex(seqIndex, newData, DESTROYED, false, true);
 					break;
 
 				case NSL_OBJECT_FLAG_SNAPSHOT:
@@ -280,7 +282,7 @@ namespace nsl {
 					newData = extractObjectData(objectClass, stream);
 
 					objectManager.addObjectToPacket(seqIndex, object);
-					object->setDataBySeqIndex(seqIndex, newData, ObjectSnapshotMeta::UPDATED);
+					object->setDataBySeqIndex(seqIndex, newData, UPDATED);
 					break;
 				/*
 				case NSL_OBJECT_FLAG_NO_CHANGE:
@@ -289,7 +291,7 @@ namespace nsl {
 					memcpy(newData, ackData, objectClass->getByteSize());
 
 					objectManager.addObjectToPacket(seqIndex, object);
-					object->setDataBySeqIndex(seqIndex, newData, ObjectSnapshotMeta::UPDATED);
+					object->setDataBySeqIndex(seqIndex, newData, UPDATED);
 					break;
 					*/
 				}
@@ -314,29 +316,29 @@ namespace nsl {
 
 				switch (flag) {
 				case NSL_OBJECT_FLAG_CREATE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, ObjectSnapshotMeta::CREATED, true, false);
+					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED, true, false);
 					objectManager.addObjectToPacket(seqIndex, o);
 					break;
 
 				case NSL_OBJECT_FLAG_CREATE_AND_DELETE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, ObjectSnapshotMeta::CREATED_AND_DESTROYED, true, true);
+					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, true, true);
 					break;
 
 				case NSL_OBJECT_FLAG_CREATE_AND_OUT_OF_SCOPE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, ObjectSnapshotMeta::CREATED_AND_DESTROYED, true, false);
+					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, true, false);
 					break;
 
 				case NSL_OBJECT_FLAG_IN_SCOPE:
-					extractObjectFromStream(o,stream, seqIndex, classId, objectId, ObjectSnapshotMeta::CREATED, false, false);
+					extractObjectFromStream(o,stream, seqIndex, classId, objectId, CREATED, false, false);
 					objectManager.addObjectToPacket(seqIndex, o);
 					break;
 
 				case NSL_OBJECT_FLAG_IN_SCOPE_AND_DELETE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, ObjectSnapshotMeta::CREATED_AND_DESTROYED, false, true);
+					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, false, true);
 					break;
 
 				case NSL_OBJECT_FLAG_IN_SCOPE_AND_OUT_OF_SCOPE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, ObjectSnapshotMeta::CREATED_AND_DESTROYED, false, false);
+					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, false, false);
 					break;
 
 				default:

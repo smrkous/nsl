@@ -237,7 +237,7 @@ namespace nsl {
 			int ackFromNetworkDistance = (networkIndex - networkAckIndex + NSL_PACKET_BUFFER_SIZE) % NSL_PACKET_BUFFER_SIZE;
 
 			// from previous restrictions choose the non-rewritable interval size
-			neccessaryIndexBeforeNetworkCount = max(applicationFromNetworkDistance, ackFromNetworkDistance);
+			neccessaryIndexBeforeNetworkCount = std::max(applicationFromNetworkDistance, ackFromNetworkDistance);
 		}
 
 		double HistoryBuffer::getAverageTimeInterval(unsigned int intervalCount)
