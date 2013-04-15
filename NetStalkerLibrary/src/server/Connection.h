@@ -5,7 +5,7 @@ namespace nsl {
 	class BitStreamWriter;
 };
 
-#include "../common.h"
+#include "../configuration.h"
 #include "../Socket.h"
 #include <map>
 

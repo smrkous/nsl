@@ -1,8 +1,8 @@
 #pragma once
 
-#include "common.h"
+#include "configuration.h"
 
-#ifdef PLATFORM_WINDOWS
+#ifdef NSL_PLATFORM_WINDOWS
 
 	#include <winsock2.h>
 	#pragma comment( lib, "wsock32.lib" )

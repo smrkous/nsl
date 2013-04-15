@@ -1,0 +1,8 @@
+# Project cache and compile files and folders
+Debug/*
+ipch/*
+*.opensdf
+*.sdf
+*.suo
+Release/*
+*csv

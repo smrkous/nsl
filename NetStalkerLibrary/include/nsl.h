@@ -8,9 +8,19 @@
 #include <exception>
 
 namespace nsl {
-#define NSL_BUILD_DLL
-	/// Define import or export
+
+	/* Platform recognition */
+
 	#if defined( __WIN32__ ) || defined( WIN32 ) || defined( _WIN32 )
+		#define NSL_PLATFORM_WINDOWS
+	#elif defined(__APPLE__)
+		#define NSL_PLATFORM_MAC
+	#else
+		#define NSL_PLATFORM_UNIX
+	#endif
+
+	/// Define import or export
+	#if defined NSL_PLATFORM_WINDOWS
 		#if defined( NSL_BUILD_DLL )
 			#define NSL_IMPORT_EXPORT __declspec(dllexport)
 		#else

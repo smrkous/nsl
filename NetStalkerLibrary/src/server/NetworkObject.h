@@ -10,7 +10,7 @@ namespace nsl {
 	};
 };
 
-#include "../common.h"
+#include "../configuration.h"
 
 namespace nsl {
 	namespace server {

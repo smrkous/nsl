@@ -2,8 +2,6 @@
 #include "../ObjectClassDefinition.h"
 #include "NetworkObject.h"
 #include <string.h>
-#include <iostream>
-#include <fstream>
 
 namespace nsl {
 	namespace server {

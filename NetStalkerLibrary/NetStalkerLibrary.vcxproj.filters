@@ -27,9 +27,6 @@
     <ClCompile Include="src\ObjectClassDefinition.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\socket.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\client\Client.cpp">
       <Filter>src\client</Filter>
     </ClCompile>
@@ -78,8 +75,10 @@
     <ClCompile Include="src\server\ServerObject.cpp">
       <Filter>src\server</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="src\Socket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nsl.h">
@@ -97,13 +96,7 @@
     <ClInclude Include="include\nslServer.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="src\common.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\ObjectClassDefinition.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\socket.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\client\ClientImpl.h">
@@ -142,7 +135,11 @@
     <ClInclude Include="src\server\ServerImpl.h">
       <Filter>src\server</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="src\configuration.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Socket.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

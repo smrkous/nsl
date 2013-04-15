@@ -6,7 +6,7 @@ namespace nsl {
 
 };
 
-#include "../common.h"
+#include "../configuration.h"
 #include "NetworkObject.h"
 #include "HistoryBuffer.h"
 #include "ObjectManager.h"

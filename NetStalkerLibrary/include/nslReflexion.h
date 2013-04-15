@@ -120,8 +120,8 @@ namespace nsl {
 	template <class T>
 	void ObjectClass::defineAttribute(unsigned int attrId) {
 		AttributeDefinition a;
-		a.interpolationFunction = (typename T::isInterpolated() ? (abstractInterpolationFunction)(T::defaultInterpolation) : NULL);
-		a.size = typename T::getByteSize();
+		a.interpolationFunction = (T::isInterpolated() ? (abstractInterpolationFunction)(T::defaultInterpolation) : NULL);
+		a.size = T::getByteSize();
 		a.identifier = attrId;
 		attributes.push_back(a);
 		attributeMaxId = std::max(attributeMaxId, attrId);
@@ -131,7 +131,7 @@ namespace nsl {
 	void ObjectClass::defineAttribute(unsigned int attrId, typename T::interpolationFunction interpolationFunction) {
 		AttributeDefinition a;
 		a.interpolationFunction = (abstractInterpolationFunction)interpolationFunction;
-		a.size = typename T::getByteSize();
+		a.size = T::getByteSize();
 		a.identifier = attrId;
 		attributes.push_back(a);
 		attributeMaxId = std::max(attributeMaxId, attrId);

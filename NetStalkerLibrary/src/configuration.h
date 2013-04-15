@@ -1,37 +1,33 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "../include/nsl.h"
+
+#if defined NSL_PLATFORM_WINDOWS
+	#include <SDKDDKVer.h>
+	#define WIN32_LEAN_AND_MEAN
+	#include <windows.h>
+#else
+	#include <stdlib.h>
+	#include <string.h>
+#endif
 
 namespace nsl {
 
-	/* Platform recognition */
-
-	#if defined(_WIN32)
-	#define PLATFORM_WINDOWS
-	#elif defined(__APPLE__)
-	#define PLATFORM_MAC
-	#else
-	#define PLATFORM_UNIX
-	#endif
-
 	/* Endianity recognition */
-	/* gcc way */
-	#if !defined(NSL_BIG_ENDIAN) && !defined(NSL_LITTLE_ENDIAN) && defined(__BYTE_ORDER__)
-		#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-			#define NSL_LITTLE_ENDIAN
-		#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-			#define NSL_BIG_ENDIAN
-		#endif
-	#endif
 
 	#if !defined(NSL_BIG_ENDIAN) && !defined(NSL_LITTLE_ENDIAN)
-		#if defined(_M_IX86) || defined(i386)
+		#if defined(__BYTE_ORDER__)
+			#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+				#define NSL_LITTLE_ENDIAN
+			#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+				#define NSL_BIG_ENDIAN
+			#endif
+		#elif defined(_M_IX86) || defined(i386)
 			#define NSL_LITTLE_ENDIAN
 		#elif defined(__ppc__) || defined(__powerpc__) || defined (PPC)
 			#define NSL_BIG_ENDIAN
 		#else
-			#error "NSL: Endianity not recognized, must be specified manualy by macros NSL_BIG_ENDIAN or NSL_LITTLE_ENDIAN"
+			#error "NSL: Endianity not recognized, must be specified manualy by defining macros NSL_BIG_ENDIAN or NSL_LITTLE_ENDIAN"
 		#endif
 	#endif
 

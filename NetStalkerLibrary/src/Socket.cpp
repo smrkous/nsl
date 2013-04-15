@@ -1,4 +1,3 @@
-// platform detection
 #include "Socket.h"
 #include <iostream>
 #include <fstream>
@@ -57,7 +56,7 @@ namespace nsl {
 
 		// set non-blocking io
 
-		#ifdef PLATFORM_WINDOWS
+		#ifdef NSL_PLATFORM_WINDOWS
 			DWORD nonBlocking = 1;
 			if ( ioctlsocket( socket, FIONBIO, &nonBlocking ) != 0 )
 			{
@@ -79,7 +78,7 @@ namespace nsl {
 	{
 		if ( socket != 0 )
 		{
-			#ifdef PLATFORM_WINDOWS
+			#ifdef NSL_PLATFORM_WINDOWS
 			closesocket( socket );
 			#else
 			::close( socket );
@@ -121,7 +120,7 @@ namespace nsl {
 		if ( socket == 0 )
 			return false;
 
-		#ifdef PLATFORM_WINDOWS
+		#ifdef NSL_PLATFORM_WINDOWS
 		typedef int socklen_t;
 		#endif
 

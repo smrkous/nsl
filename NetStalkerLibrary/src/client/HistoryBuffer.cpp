@@ -1,7 +1,7 @@
 #include "HistoryBuffer.h"
 #include "ObjectManager.h"
-
 #include <algorithm>
+using namespace std; // windows min/max problem forced this
 
 namespace nsl {
 	namespace client {
@@ -237,7 +237,7 @@ namespace nsl {
 			int ackFromNetworkDistance = (networkIndex - networkAckIndex + NSL_PACKET_BUFFER_SIZE) % NSL_PACKET_BUFFER_SIZE;
 
 			// from previous restrictions choose the non-rewritable interval size
-			neccessaryIndexBeforeNetworkCount = std::max(applicationFromNetworkDistance, ackFromNetworkDistance);
+			neccessaryIndexBeforeNetworkCount = max(applicationFromNetworkDistance, ackFromNetworkDistance);
 		}
 
 		double HistoryBuffer::getAverageTimeInterval(unsigned int intervalCount)

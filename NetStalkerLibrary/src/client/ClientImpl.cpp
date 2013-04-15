@@ -4,6 +4,7 @@
 #include "../../include/nslBitStream.h"
 #include "NetworkObject.h"
 #include "../ObjectClassDefinition.h"
+using namespace std;
 
 namespace nsl {
 	namespace client {
@@ -98,7 +99,7 @@ namespace nsl {
 					double timeOverlapDiff = optimalApplicationTime - currentTime - timeOverlap;
 
 					// limit the difference by maximal speedup / slowdown
-					double step = std::min(std::abs(timeOverlapDiff), (currentTime - lastUpdateTime) * (1 - NSL_MAXIMAL_SPEEDUP));
+					double step = min(std::abs(timeOverlapDiff), (currentTime - lastUpdateTime) * (1 - NSL_MAXIMAL_SPEEDUP));
 
 					// alter the timeOverlap
 					timeOverlap += (timeOverlap < 0) ? -step : step;

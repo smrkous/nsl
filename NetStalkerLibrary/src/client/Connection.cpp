@@ -1,6 +1,9 @@
-#include <arpa/inet.h>
 #include "Connection.h"
 #include "../../include/nslBitStream.h"
+#if !defined NSL_PLATFORM_WINDOWS
+#include <arpa/inet.h>
+#endif
+
 
 namespace nsl {
 	namespace client {

@@ -10,7 +10,7 @@ namespace nsl {
 	};
 };
 
-#include "../common.h"
+#include "../configuration.h"
 #include <vector>
 #include <map>
 #include <iterator>

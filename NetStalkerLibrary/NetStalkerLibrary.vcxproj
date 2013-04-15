@@ -32,8 +32,7 @@
     <ClCompile Include="src\server\Server.cpp" />
     <ClCompile Include="src\server\ServerImpl.cpp" />
     <ClCompile Include="src\server\ServerObject.cpp" />
-    <ClCompile Include="src\socket.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="src\Socket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nsl.h" />
@@ -47,7 +46,7 @@
     <ClInclude Include="src\client\HistoryBuffer.h" />
     <ClInclude Include="src\client\NetworkObject.h" />
     <ClInclude Include="src\client\ObjectManager.h" />
-    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\configuration.h" />
     <ClInclude Include="src\ObjectClassDefinition.h" />
     <ClInclude Include="src\server\Connection.h" />
     <ClInclude Include="src\server\HistoryBuffer.h" />
@@ -55,9 +54,7 @@
     <ClInclude Include="src\server\ObjectManager.h" />
     <ClInclude Include="src\server\Peer.h" />
     <ClInclude Include="src\server\ServerImpl.h" />
-    <ClInclude Include="src\socket.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="src\Socket.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8D9C73A9-6EB1-4D70-A9B2-CC1DDB8CB550}</ProjectGuid>
@@ -99,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NETSTALKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NSL_BUILD_DLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
@@ -118,7 +115,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NETSTALKER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NSL_BUILD_DLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>

@@ -7,7 +7,7 @@ namespace nsl {
 	};
 };
 
-#include "../common.h"
+#include "../configuration.h"
 #include <map>
 
 namespace nsl {
