@@ -1,5 +1,5 @@
-#include "../common.h"
 #include "../../include/nslServer.h"
+#include "../common.h"
 #include "NetworkObject.h"
 #include "../ObjectClassDefinition.h"
 

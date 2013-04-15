@@ -56,13 +56,8 @@ namespace nsl {
 	#define NSL_TIMEOUT_CLIENT_CONNECTION_REQUEST 0.5
 	#define NSL_TIMEOUT_CLIENT_HANDSHAKE 0.5
 	#define NSL_TIMEOUT_SERVER_HANDSHAKE_RESEND 0.5
-	#define NSL_TIMEOUT_SERVER_HANDSHAKE_KILL 5
-	#define NSL_TIMEOUT_SERVER_CONNECTED_KILL 5
-
-	#define NSL_DUMP_FILENAME_SERVER "server_dump_log.csv"
-	#define NSL_DUMP_FILENAME_CLIENT "client_dump_log.csv"
-	#define NSL_PACKET_LOG_FILENAME_SERVER "server_packet_log.csv"
-	#define NSL_PACKET_LOG_FILENAME__CLIENT "client_packet_log.csv"
+	#define NSL_TIMEOUT_SERVER_HANDSHAKE_KILL 500
+	#define NSL_TIMEOUT_SERVER_CONNECTED_KILL 500
 
 	//#define PACKET_LOSS_RATE 30				// percentage of lost packets (simulated for debug purposes)
 
@@ -79,4 +74,13 @@ namespace nsl {
 	#define NSL_OBJECT_FLAG_IN_SCOPE_AND_DELETE 8
 	#define NSL_OBJECT_FLAG_IN_SCOPE_AND_OUT_OF_SCOPE 9
 	#define NSL_OBJECT_FLAG_CREATE_AND_OUT_OF_SCOPE 10
+
+
+	/* debug configuration */
+	#define NSL_LOG_PACKETS
+	#define NSL_PACKET_LOG_FILENAME "packet_log.csv"
+
+	#ifdef NSL_LOG_PACKETS
+		void logBytes(byte* data, unsigned int size);
+	#endif
 };

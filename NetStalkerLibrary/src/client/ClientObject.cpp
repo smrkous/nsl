@@ -3,8 +3,8 @@
 #include "../ObjectClassDefinition.h"
 
 namespace nsl {
-	ClientObject::ClientObject(client::NetworkObject*)
-		: networkObject(networkObject)
+	ClientObject::ClientObject(client::NetworkObject* o)
+		: networkObject(o)
 	{
 	}
 

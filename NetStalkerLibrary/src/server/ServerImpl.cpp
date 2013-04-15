@@ -157,7 +157,7 @@ namespace nsl {
 				int ackIndex;
 
 				if (peer->hasAck()) {
-					seqNumber ack = historyBuffer.isSeqInBounds(peer->getLastAck());
+					seqNumber ack = peer->getLastAck();
 					if (!historyBuffer.isSeqInBounds(ack)) {
 						userObject->onClientDisconnect(peer->getPeerConnection()->connectionId);
 						it = connectedPeers.erase(it);
@@ -199,27 +199,26 @@ namespace nsl {
 		void ServerImpl::sendUpdateToPeer(Peer* peer, std::set<NetworkObject*>& scope, int ackIndex)
 		{
 			int currentSeqIndex = historyBuffer.getCurrentSeqIndex();
-			std::vector<NetworkObject*> seqScope = peer->getScope(currentSeqIndex);
-			seqScope.clear();
+			std::vector<NetworkObject*>* seqScope = peer->getScope(currentSeqIndex);
+			seqScope->clear();
 
 			Packet* packet = connection.createPacket(peer->getPeerConnection());
 			BitStreamWriter* stream = packet->getStream();
 
 			seqNumber seq = historyBuffer.indexToSeq(currentSeqIndex);
 			stream->write<Attribute<seqNumber> >(seq);
-			stream->write<Attribute<seqNumber> >(peer->getCustomMessageSeq());
 			if (ackIndex == NSL_UNDEFINED_BUFFER_INDEX) {
 				stream->write<Attribute<seqNumber> >(seq);
 			} else {
 				stream->write<Attribute<seqNumber> >(historyBuffer.indexToSeq(ackIndex));
 			}
 			stream->write<double64>(historyBuffer.getTime(currentSeqIndex));
-
+			stream->write<Attribute<seqNumber> >(peer->getCustomMessageSeq());
 
 			// create diff part of update
 			if (ackIndex != NSL_UNDEFINED_BUFFER_INDEX) {
-				std::vector<NetworkObject*> ackScope = peer->getScope(ackIndex);
-				for(std::vector<NetworkObject*>::iterator it = ackScope.begin(); it != ackScope.end(); it++) {
+				std::vector<NetworkObject*>* ackScope = peer->getScope(ackIndex);
+				for(std::vector<NetworkObject*>::iterator it = ackScope->begin(); it != ackScope->end(); it++) {
 
 					NetworkObject* o = *it;
 
@@ -232,7 +231,7 @@ namespace nsl {
 						}
 					} else {
 						scope.erase(scopeObject);
-						seqScope.push_back(o);
+						seqScope->push_back(o);
 
 						byte* newData;
 
@@ -262,6 +261,7 @@ namespace nsl {
 			// add new objects to packet
 			for(std::set<NetworkObject*>::iterator it = scope.begin(); it != scope.end(); it++) {
 				NetworkObject* o = (*it);
+				seqScope->push_back(o);
 				if (o->getCreationIndex() == currentSeqIndex) {
 					stream->writeByte(NSL_OBJECT_FLAG_CREATE);
 				} else {
@@ -272,6 +272,7 @@ namespace nsl {
 				stream->write<uint32>(o->getId());
 				writeObjectData(o->getObjectClass(), stream, o->getDataBySeqIndex(currentSeqIndex));
 			}
+			stream->write<uint8>(NSL_OBJECT_FLAG_END_OF_SECTION);
 
 
 			// custom messages

@@ -10,7 +10,8 @@
 namespace nsl {
 	namespace client {
 
-		ObjectManager::ObjectManager()
+		ObjectManager::ObjectManager(HistoryBuffer* buffer)
+			:historyBuffer(buffer)
 		{
 
 		}
@@ -137,12 +138,15 @@ namespace nsl {
 						notUseful = false;
 						break;
 					}
+					firstNeccessaryIndex = historyBuffer->getNextValidIndex(firstNeccessaryIndex);
 				} while(currentIndex != firstNeccessaryIndex);
 
 				if (notUseful) {
 					NetworkObject* o = it->second;
 					it = objects.erase(it);
 					delete o;
+				} else {
+					it++;
 				}
 			}
 		}

@@ -7,6 +7,7 @@
 
 #include "nsl.h"
 #include <vector>
+#include <algorithm>
 
 namespace nsl {
 
@@ -36,14 +37,14 @@ namespace nsl {
 		static void defaultInterpolation(unsigned int pointCount, T const*const* data, double const* time, double targetTime, T* result) {
 			
 			if (pointCount == 1) {
-				result = data[0];
+				*result = *data[0];
 				return;
 			}
 
 			// find time bounds
 			int leftIndex = pointCount - 2;
 			int rightIndex = pointCount - 1;
-			while (leftIndex > 0 && time[leftIndex] > time) {
+			while (leftIndex > 0 && time[leftIndex] > targetTime) {
 				rightIndex = leftIndex;
 				leftIndex--;
 			}
@@ -78,12 +79,12 @@ namespace nsl {
 	// ObjectClass
 	/////////////////////////////////////////////////////////////////////
 
-	/// Readonly data structure containing definition of single attribute
+	/// Data structure containing definition of single attribute
 	struct AttributeDefinition 
 	{
-		const abstractInterpolationFunction interpolationFunction;
-		const unsigned int size;
-		const unsigned int identifier;
+		abstractInterpolationFunction interpolationFunction;
+		unsigned int size;
+		unsigned int identifier;
 	};
 
 
@@ -100,7 +101,8 @@ namespace nsl {
 	public:
 		/// Create new object class with unique id.
 		NSL_IMPORT_EXPORT 
-		ObjectClass(unsigned short classId) : id(classId) {}
+		ObjectClass(unsigned short classId) 
+			: id(classId), attributeMaxId(0) {}
 
 		/// Define attribute with default interpolation
 		template <class T> NSL_IMPORT_EXPORT
@@ -122,7 +124,7 @@ namespace nsl {
 		a.size = typename T::getByteSize();
 		a.identifier = attrId;
 		attributes.push_back(a);
-		attributeMaxId = max(attributeMaxIdentifier, attrId);
+		attributeMaxId = std::max(attributeMaxId, attrId);
 	}
 
 	template <class T>
@@ -132,7 +134,7 @@ namespace nsl {
 		a.size = typename T::getByteSize();
 		a.identifier = attrId;
 		attributes.push_back(a);
-		attributeMaxId = max(attributeMaxIdentifier, attrId);
+		attributeMaxId = std::max(attributeMaxId, attrId);
 	}
 	
 };

@@ -45,11 +45,12 @@ namespace nsl {
 				}
 
 				// choose to copy default data (only if object was not deleted yet) or set NULL
-				if (defaultsBufferIndex != NSL_UNDEFINED_BUFFER_INDEX && defaultsBufferIndex != o->getDestroyIndex()) {
+				if (defaultsBufferIndex != NSL_UNDEFINED_BUFFER_INDEX) {
 					byte* defaultData = o->getDataBySeqIndex(defaultsBufferIndex);
 					if (defaultData != NULL) {
 						if (data == NULL) {
 							data = new byte[o->getObjectClass()->getByteSize()];
+							o->setDataBySeqIndex(bufferIndex, data);
 						}
 						memcpy(data, defaultData, o->getObjectClass()->getByteSize());
 					} else {
@@ -58,9 +59,12 @@ namespace nsl {
 							o->setDataBySeqIndex(bufferIndex, NULL);
 						}
 					}
-				} else if (data != NULL) {
-					delete[] data;
-					o->setDataBySeqIndex(bufferIndex, NULL);
+				} else {
+					if (data == NULL) {
+						data = new byte[o->getObjectClass()->getByteSize()];
+						o->setDataBySeqIndex(bufferIndex, data);
+					}
+					memset(data, 0, o->getObjectClass()->getByteSize());
 				}
 
 				it++;

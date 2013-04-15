@@ -92,23 +92,23 @@ namespace nsl {
 			int finalIndex = historyBuffer->getLastSeqIndex();
 			if (index != finalIndex) {
 				index = historyBuffer->getNextValidIndex(index);
-				while (index != finalIndex || interpolationPointsCount <= NSL_INTERPOLATION_MINIMAL_DATA_COUNT) {
+				while (index != finalIndex && interpolationPointsCount <= NSL_INTERPOLATION_MINIMAL_DATA_COUNT) {
 					if (data[index] != NULL) {
 						interpolationPoints[NSL_INTERPOLATION_MINIMAL_DATA_COUNT + interpolationPointsCount] = data[index];
 						pointTimes[NSL_INTERPOLATION_MINIMAL_DATA_COUNT + interpolationPointsCount] = historyBuffer->getTime(index);
 						interpolationPointsCount++;
 					} else {
 						// we cannot to iterate further, because we got after object destruction
-						return;
+						break;
 					}
 					index = historyBuffer->getNextValidIndex(index);
 				}
 			}
 
 			// backward search
-			index = historyBuffer->getPreviousValidIndex(index);
-			interpolationPointsOffset = NSL_UNDEFINED_BUFFER_INDEX;
-			while (index != NSL_UNDEFINED_BUFFER_INDEX || interpolationPointsOffset > 0) {
+			index = historyBuffer->getPreviousValidIndex(applicationIndex);
+			interpolationPointsOffset = NSL_INTERPOLATION_MINIMAL_DATA_COUNT;
+			while (index != NSL_UNDEFINED_BUFFER_INDEX && interpolationPointsOffset > 0) {
 				if (data[index] != NULL) {
 					interpolationPointsOffset--;
 					interpolationPointsCount++;
@@ -116,7 +116,7 @@ namespace nsl {
 					pointTimes[interpolationPointsOffset] = historyBuffer->getTime(index);
 				} else {
 					// we cannot iterate further, because we got before object creation
-					return;
+					break;
 				}
 				index = historyBuffer->getPreviousValidIndex(index);
 			}

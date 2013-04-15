@@ -12,6 +12,12 @@ namespace nsl {
 				data[i] = NULL;
 			}
 
+			int currentIndex = historyBuffer->getCurrentSeqIndex();
+			if (currentIndex == NSL_UNDEFINED_BUFFER_INDEX) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: creating new object before updating network");
+			}
+			data[currentIndex] = new byte[objectClass->getByteSize()];
+
 			serverObject = new ServerObject(this);
 			destroyIndex = NSL_UNDEFINED_BUFFER_INDEX;
 			creationIndex = historyBuffer->getCurrentSeqIndex();

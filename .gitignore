@@ -11,6 +11,8 @@
 *.lai
 *.la
 *.a
+
+# Project cache and compile files and folders
 NetStalkerLibrary/Debug/*
 NetStalkerLibrary/ipch/*
 NetStalkerLibrary/NetStalkerLibrary.opensdf

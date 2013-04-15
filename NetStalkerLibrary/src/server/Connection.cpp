@@ -36,6 +36,7 @@ namespace nsl {
 		{
 			state = CLOSED;
 			timeoutIteratorValid = false;
+			lastConnectionId = 0;
 		}
 
 		Connection::~Connection(void)
@@ -53,6 +54,8 @@ namespace nsl {
 			if (!socket.open(serverPort)) {
 				throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: connection open attemp failed.");
 			}
+
+			state = OPENED;
 		}
 
 		bool Connection::isOpened(void)
@@ -90,7 +93,7 @@ namespace nsl {
 					peer = new PeerConnection(++lastConnectionId, sender);
 					peer->lastResponse = time;
 					handshakingPeers.insert(std::pair<unsigned int, PeerConnection*>(lastConnectionId, peer));
-					sendHandshake(sender, connectionId);
+					sendHandshake(sender, lastConnectionId);
 					delete stream;
 					continue;
 				}
@@ -101,7 +104,7 @@ namespace nsl {
 
 					// try handshaking peers
 					it = handshakingPeers.find(connectionId);
-					if (it != connectedPeers.end()) {
+					if (it != handshakingPeers.end()) {
 
 						peer = it->second;
 						handshakingPeers.erase(connectionId);
@@ -221,6 +224,7 @@ namespace nsl {
 			BitStreamWriter* stream = new BitStreamWriter();
 			stream->write<uint16>(applicationId);
 			stream->write<uint32>(peer->connectionId);
+			stream->write<uint8>(NSL_CONNECTION_FLAG_UPDATE);
 
 			return new Packet(this, stream, peer);
 		}

@@ -104,6 +104,10 @@ namespace nsl {
 		if ( socket == 0 )
 			return false;
 
+	#ifdef NSL_LOG_PACKETS
+		logBytes((byte*)data, size);
+	#endif
+
 		int sent_bytes = sendto( socket, (const char*)data, size, 0, (sockaddr*)&destination, sizeof(sockaddr_in) );
 
 		return sent_bytes == size;

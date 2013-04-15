@@ -24,7 +24,7 @@ namespace nsl {
 
 		bool HistoryBuffer::isEmpty(void)
 		{
-			return networkIndex == NSL_UNDEFINED_BUFFER_INDEX;
+			return validUpdatesCounter < 1;
 		}
 
 		int HistoryBuffer::getLastSeqIndex(void)
@@ -163,7 +163,7 @@ namespace nsl {
 			// iterate trough all buffer indexes until reaching networkIndex
 			// start with next index from the passed one (if networkIndex passed, return immediately)
 			while (index != networkIndex) {
-				index = (index++) % NSL_PACKET_BUFFER_SIZE;
+				index = (index + 1) % NSL_PACKET_BUFFER_SIZE;
 				if (validData[index]) {
 					return index;
 				}
@@ -176,14 +176,14 @@ namespace nsl {
 		int HistoryBuffer::getPreviousValidIndex(int index)
 		{
 			// start with previous index (networkIndex is the last valid index, that this function accepts)
-			index = (index--) % NSL_PACKET_BUFFER_SIZE;
+			index = (index - 1 + NSL_PACKET_BUFFER_SIZE) % NSL_PACKET_BUFFER_SIZE;
 
 			// iterate trough all buffer indexes, until reaching networkIndex
 			while (index != networkIndex) {
 				if (validData[index]) {
 					return index;
 				}
-				index = (index--) % NSL_PACKET_BUFFER_SIZE;
+				index = (index - 1 + NSL_PACKET_BUFFER_SIZE) % NSL_PACKET_BUFFER_SIZE;
 			}
 
 			// do not check network index, end with previous index

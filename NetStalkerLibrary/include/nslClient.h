@@ -49,6 +49,7 @@ namespace nsl {
 		~ClientObject(void);
 
 		/// if the value is not interpolated, false is returned and the single data piece is stored in data[0]
+		NSL_IMPORT_EXPORT
 		bool get(
 			unsigned int attrId, 
 			unsigned int byteSize, 
@@ -147,11 +148,11 @@ namespace nsl {
 			data,
 			times,
 			targetTime,
-			abstractInterpolationFunction interpolationFunction
+			interpolationFunction
 		)) {
 			result = *((typename T::Type*)data[0]);
 		} else {
-			(typename T::interpolationFunction)(interpolationFunction)(pointCount, (T::Type**)data, times, targetTime, &result);
+			((typename T::interpolationFunction)interpolationFunction)(pointCount, (typename T::Type**)data, times, targetTime, &result);
 		};
 
 		return result;

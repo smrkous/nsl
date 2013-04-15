@@ -72,7 +72,7 @@ namespace nsl {
 		int CustomMessageBuffer::getNextValidIndex(int index)
 		{
 			if (index != currentIndex) {
-				return (index + 1);
+				return (index + 1) % NSL_CUSTOM_MESSAGE_BUFFER_SIZE;
 			}
 		}
 

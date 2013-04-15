@@ -35,6 +35,7 @@ namespace nsl {
 			state = CLOSED;
 			connectedAddress.sin_family = AF_INET;
 			connectionId = 0;
+			bufferedMessage = NULL;
 		}
 
 		Connection::~Connection(void)
@@ -185,6 +186,7 @@ namespace nsl {
 			BitStreamWriter* stream = new BitStreamWriter();
 			stream->write<uint16>(applicationId);
 			stream->write<uint32>(connectionId);
+			stream->write<uint8>(NSL_CONNECTION_FLAG_UPDATE);
 
 			return new Packet(this, stream);
 		}

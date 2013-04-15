@@ -7,7 +7,7 @@ namespace nsl {
 	namespace client {
 
 		ClientImpl::ClientImpl(Client* userObject, unsigned short applicationId, unsigned short clientPort)
-			: connection(applicationId, clientPort)
+			: connection(applicationId, clientPort), objectManager(&historyBuffer)
 		{
 			this->userObject = userObject;
 			lastConnectionState = CLOSED;
@@ -218,7 +218,10 @@ namespace nsl {
 			{
 				return;
 			}
-
+#ifdef NSL_LOG_PACKETS
+					byte x = 99;
+					logBytes(&x, 1);
+#endif
 			customMessageBuffer.updateAck(stream->read<Attribute<seqNumber> >());
 
 			int seqIndex = historyBuffer.seqToIndex(seq);
@@ -363,7 +366,7 @@ namespace nsl {
 			byte* data;
 
 			if (o == NULL) {
-				NetworkObject* o = objectManager.createObject(classId, objectId);
+				o = objectManager.createObject(classId, objectId);
 			}
 
 			data = extractObjectData(o->getObjectClass(), stream);

@@ -37,7 +37,7 @@ namespace nsl {
 			void clearIndex(int bufferIndex);
 			int getFirstUpdateIndex(void) {return firstUpdateIndex;}
 			void setFirstUpdateIndex(int bufferIndex) {firstUpdateIndex = bufferIndex;};
-			std::vector<NetworkObject*>& getScope(int bufferIndex);
+			std::vector<NetworkObject*>* getScope(int bufferIndex);
 			std::vector<std::pair<byte*, unsigned int> >& getBufferedCustomMessages(int bufferIndex) {return customMessageBuffer[bufferIndex];}
 			std::vector<std::pair<BitStreamWriter*, bool> >& getNewCustomMessages() {return newCustomMessages;}
 		};

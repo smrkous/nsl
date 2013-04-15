@@ -10,6 +10,7 @@ namespace nsl {
 		HistoryBuffer::HistoryBuffer(void)
 		{
 			currentSeq = 0;
+			currentIndex = NSL_UNDEFINED_BUFFER_INDEX;
 			validUpdatesCounter = 0;
 		}
 
@@ -31,13 +32,16 @@ namespace nsl {
 		{
 			if (validUpdatesCounter > 0) {
 				int prevIndex = currentIndex;
+				currentSeq = (currentSeq + 1) % NSL_SEQ_MODULO;
 				currentIndex = (currentIndex + 1) % NSL_PACKET_BUFFER_SIZE_SERVER;
 				objectManager->clearBufferIndex(currentIndex, prevIndex);
 				for(std::map<unsigned int, Peer*>::iterator it = peers->begin(); it != peers->end(); it++) {
 					it->second->clearIndex(currentIndex);
 				}
+			} else {
+				// if this is first update, set currentIndex to 0 (data are already cleared)
+				currentIndex = 0;
 			}
-			// if this is first update, keep currentIndex at 0 (and data are already cleared)
 			timeData[currentIndex] = time;
 			validUpdatesCounter++;
 		}

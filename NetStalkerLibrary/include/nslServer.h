@@ -38,7 +38,7 @@ namespace nsl {
 		/// Valid attribute id and respective data type must be provided, 
 		/// otherwise exception might be thrown to prevent memmory leak or data values might be wrong.
 		template<class T> NSL_IMPORT_EXPORT
-		void set(unsigned int attrId, typename T::Type value) {set(attrId, typename T::getByteSize(), (byte*)value);}
+		void set(unsigned int attrId, typename T::Type value) {set(attrId, typename T::getByteSize(), (byte*)&value);}
 
 		/// Delete this object from network space.
 		NSL_IMPORT_EXPORT
@@ -51,6 +51,8 @@ namespace nsl {
 
 		ServerObject(server::NetworkObject*);
 		~ServerObject(void);
+
+		NSL_IMPORT_EXPORT
 		void set(unsigned int attrId, unsigned int byteSize, byte* value);
 	};
 

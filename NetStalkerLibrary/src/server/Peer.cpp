@@ -7,6 +7,7 @@ namespace nsl {
 		Peer::Peer(PeerConnection* peer) : peerConnection(peer)
 		{
 			customMessageSeq = 0;
+			isAck = false;
 			firstUpdateIndex = NSL_UNDEFINED_BUFFER_INDEX;
 		}
 
@@ -37,9 +38,9 @@ namespace nsl {
 			return isAck;
 		}
 
-		std::vector<NetworkObject*>& Peer::getScope(int bufferIndex)
+		std::vector<NetworkObject*>* Peer::getScope(int bufferIndex)
 		{
-			return scope[bufferIndex];
+			return &scope[bufferIndex];
 		}
 
 		void Peer::clearIndex(int bufferIndex)

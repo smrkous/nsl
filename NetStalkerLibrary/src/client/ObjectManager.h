@@ -26,7 +26,7 @@ namespace nsl {
 			std::map<unsigned short, ObjectClassDefinition*> objectClasses;
 			std::vector<NetworkObject*> objectsInPacket[NSL_PACKET_BUFFER_SIZE];
 		public:
-			ObjectManager(void);
+			ObjectManager(HistoryBuffer*);
 			~ObjectManager(void);
 
 			// manage scheduled actions

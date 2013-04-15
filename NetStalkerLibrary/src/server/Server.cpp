@@ -1,5 +1,6 @@
 #include "../../include/nslServer.h"
 #include "ServerImpl.h"
+#include "NetworkObject.h"
 #include "../ObjectClassDefinition.h"
 
 namespace nsl {
@@ -27,6 +28,11 @@ namespace nsl {
 	void Server::registerObjectClass(ObjectClass* objectClass)
 	{
 		i->registerObjectClass(new ObjectClassDefinition(objectClass));
+	}
+
+	ServerObject* Server::createObject(unsigned short classId)
+	{
+		return i->createObject(classId)->getUserObject();
 	}
 
 	BitStreamWriter* Server::createCustomMessage(int peer, bool reliable)
@@ -72,6 +78,5 @@ namespace nsl {
 	{
 		i->addToScope(object);
 	}
-
 
 };
