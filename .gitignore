@@ -19,3 +19,19 @@ NetStalkerLibrary/NetStalkerLibrary.opensdf
 NetStalkerLibrary/NetStalkerLibrary.sdf
 NetStalkerLibrary/NetStalkerLibrary.suo
 NetStalkerLibrary/Release/*
+
+# Test projects ingnore
+tests/basicConnection/server/packet_log.csv
+tests/basicConnection/server/Debug/*
+tests/basicConnection/server/ipch/*
+tests/basicConnection/server/NslTestServer.opensdf
+tests/basicConnection/server/NslTestServer.sdf
+tests/basicConnection/server/NslTestServer.suo
+tests/basicConnection/server/Release/*
+tests/basicConnection/client/packet_log.csv
+tests/basicConnection/client/Debug/*
+tests/basicConnection/client/ipch/*
+tests/basicConnection/client/NslTestClient.opensdf
+tests/basicConnection/client/NslTestClient.sdf
+tests/basicConnection/client/NslTestClient.suo
+tests/basicConnection/client/Release/*

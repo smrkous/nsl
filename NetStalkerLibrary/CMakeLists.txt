@@ -48,4 +48,4 @@ set(NS_SOURCES
 )
 
 add_definitions(-DHAS_SOCKLEN_T)
-add_library(netstalker SHARED ${NS_HEADERS} ${NS_SOURCES} ${ENET_SOURCES})
+add_library(netstalker SHARED ${NS_HEADERS} ${NS_SOURCES})
