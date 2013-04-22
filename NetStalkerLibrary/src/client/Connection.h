@@ -7,6 +7,9 @@ namespace nsl {
 
 #include "../configuration.h"
 #include "../Socket.h"
+#ifdef NSL_COMPRESS
+#include "../lz4/lz4.h"
+#endif
 
 namespace nsl {
 	namespace client {
@@ -49,6 +52,7 @@ namespace nsl {
 			sockaddr_in connectedAddress;
 			double lastRequest;
 			byte buffer[MAX_PACKET_SIZE];
+			BitStreamReader* bufferStream;	// stream over buffer to make reading of it easier
 			BitStreamReader* bufferedMessage;
 
 			void send(Packet* packet);
@@ -63,6 +67,11 @@ namespace nsl {
 			void close(void);
 			Packet* createPacket(void);
 			BitStreamReader* receive(void);
+#ifdef NSL_COMPRESS
+			// all remaining data in stream will be decompressed
+			// new reader with new buffer will be created (containing just decompressed data)
+			BitStreamReader* decompress(BitStreamReader* stream);
+#endif
 		};
 	};
 };

@@ -45,7 +45,7 @@ namespace nsl {
 			objectManager.registerObjectClass(objectClass);
 		}
 
-		bool ClientImpl::updateNetwork(void)
+		ClientState ClientImpl::updateNetwork(void)
 		{
 			double currentTime = getTime();
 
@@ -56,7 +56,12 @@ namespace nsl {
 			}
 			
 			if (lastConnectionState != CONNECTED) {
-				return false;
+				switch(lastConnectionState) {
+				case CONNECTING:
+					return NSL_CS_CLOSED;
+				case HANDSHAKING:
+					return NSL_CS_HANDSHAKING;
+				}
 			}
 
 			// proccess all incomming messages
@@ -75,12 +80,14 @@ namespace nsl {
 			}
 
 			// update application (if successful amount of data already arrived)
-			if (historyBuffer.getValidUpdatesCount() >= NSL_MINIMAL_PACKET_COUNT) {
+			bool enoughUpdatesBuffered = historyBuffer.getValidUpdatesCount() >= NSL_MINIMAL_PACKET_COUNT;
+			if (enoughUpdatesBuffered) {
 
 				int currentApplicationIndex = historyBuffer.getApplicationIndex();
 
 				// count optimal application time
 				double averageTickDuration = historyBuffer.getAverageTimeInterval(NSL_TIME_INTERVAL_AVERAGE_COUNT);
+
 				double optimalApplicationTime = historyBuffer.getTime(historyBuffer.getLastSeqIndex()) - NSL_INTERPOLATION_LATENCY_PACKET_COUNT * averageTickDuration;
 
 				// if this is first application update, find first index to start and set first timeOverlap
@@ -99,10 +106,10 @@ namespace nsl {
 					double timeOverlapDiff = optimalApplicationTime - currentTime - timeOverlap;
 
 					// limit the difference by maximal speedup / slowdown
-					double step = min(std::abs(timeOverlapDiff), (currentTime - lastUpdateTime) * (1 - NSL_MAXIMAL_SPEEDUP));
+					double step = min(std::abs(timeOverlapDiff), (currentTime - lastUpdateTime) * (NSL_MAXIMAL_SPEEDUP - 1));
 
 					// alter the timeOverlap
-					timeOverlap += (timeOverlap < 0) ? -step : step;
+					timeOverlap += (timeOverlapDiff < 0) ? -step : step;
 				}
 
 				double updateTime = currentTime + timeOverlap;
@@ -136,7 +143,7 @@ namespace nsl {
 
 			lastUpdateTime = currentTime;
 
-			return true;
+			return enoughUpdatesBuffered ? NSL_CS_OPENED : NSL_CS_BUFFERING;
 		}
 
 		void ClientImpl::flushNetwork(void)
@@ -149,7 +156,8 @@ namespace nsl {
 				// custom message part
 				customMessageBuffer.addSeq();
 				int currentIndex = customMessageBuffer.getCurrentSeqIndex();
-				stream->write<Attribute<seqNumber> >(customMessageBuffer.indexToSeq(currentIndex));
+				seqNumber cmseq = customMessageBuffer.indexToSeq(currentIndex);
+				stream->write<Attribute<seqNumber> >(cmseq);
 
 				// add unacked reliable custom messages
 				int index = customMessageBuffer.getFirstUnackedIndex();
@@ -217,15 +225,28 @@ namespace nsl {
 			// check seq validity, if ok, push seq 
 			// object manager will clear invalidated indexes 
 			// (but data from not deleted objects must be deleted manualy)
-			if (!historyBuffer.pushSeq(seq, ack, time, &objectManager))
+			int firstIndexToClear;
+			int lastIndexToClear;
+			if (!historyBuffer.pushSeq(seq, ack, time, firstIndexToClear, lastIndexToClear))
 			{
 				return;
 			}
+
+			// clear invalidated indexes
+			if (firstIndexToClear != NSL_UNDEFINED_BUFFER_INDEX) {
+				while (firstIndexToClear != lastIndexToClear) {
+					objectManager.clearBufferIndex(firstIndexToClear);
+					firstIndexToClear = historyBuffer.getNextIndex(firstIndexToClear);
+				}
+				objectManager.clearBufferIndex(lastIndexToClear);
+			}
+
 #ifdef NSL_LOG_PACKETS
 					byte x = 99;
 					logBytes(&x, 1);
 #endif
-			customMessageBuffer.updateAck(stream->read<Attribute<seqNumber> >());
+					seqNumber cmack = stream->read<Attribute<seqNumber> >();
+			customMessageBuffer.updateAck(cmack);
 
 			int seqIndex = historyBuffer.seqToIndex(seq);
 			int ackIndex = historyBuffer.seqToIndex(ack);

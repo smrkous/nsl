@@ -35,7 +35,7 @@ namespace nsl {
 		return i->createObject(classId)->getUserObject();
 	}
 
-	BitStreamWriter* Server::createCustomMessage(int peer, bool reliable)
+	BitStreamWriter* Server::createCustomMessage(nsl::Peer* peer, bool reliable)
 	{
 		return i->createCustomMessage(peer, reliable);
 	}
@@ -53,23 +53,23 @@ namespace nsl {
 
 	/* overridable methods */
 
-	bool Server::onClientConnect(int peer)
+	bool Server::onClientConnect(nsl::Peer* peer)
 	{
 		//addObjectReceiver(peer);
 		return true;
 	}
 
-	void Server::onClientDisconnect(int peer)
+	void Server::onClientDisconnect(nsl::Peer* peer)
 	{
 		//removeObjectReceiver(peer);
 	}
 
-	void Server::onMessageAccept(int peer, BitStreamReader* stream)
+	void Server::onMessageAccept(nsl::Peer* peer, BitStreamReader* stream)
 	{
 	
 	}
 
-	bool Server::getScope(int peer)
+	bool Server::getScope(nsl::Peer* peer)
 	{
 		return false;
 	}

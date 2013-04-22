@@ -12,6 +12,7 @@ namespace nsl {
 #include "ObjectManager.h"
 #include "CustomMessageBuffer.h"
 #include "Connection.h"
+#include "../../include/nslClient.h"
 #include <time.h>
 #include <deque>
 
@@ -56,8 +57,7 @@ namespace nsl {
 
 			void close(void);
 
-			/// Returns true, if there is opened connection, otherwise tries to connect (and returns false for now)
-			bool updateNetwork(void);
+			ClientState updateNetwork(void);
 
 			void flushNetwork(void);
 

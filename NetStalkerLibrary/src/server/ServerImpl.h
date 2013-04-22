@@ -5,6 +5,7 @@ namespace nsl {
 	class ServerObject;
 	class ObjectClassDefinition;
 	class BitStreamWriter;
+	class Peer;
 
 	namespace server {
 		class NetworkObject;
@@ -56,7 +57,7 @@ namespace nsl {
 			NetworkObject* createObject(unsigned int classId);
 
 			// send custom message to specified adress
-			BitStreamWriter* createCustomMessage(int peer, bool reliable);
+			BitStreamWriter* createCustomMessage(nsl::Peer* peer, bool reliable);
 
 			void updateNetwork(void);
 

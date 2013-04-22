@@ -67,8 +67,8 @@ namespace nsl {
 			/// For successful push (return true) it is required:
 			/// 1) seq must be awaited or must fill skipped hole after skipped seq
 			/// 2) ack must be present in buffer or eqal to seq
-			/// If new seq was pushed, object manager is told to clear all skipped (invalidated) data.
-			bool pushSeq(seqNumber seq, seqNumber ack, double, ObjectManager*);
+			/// If new seq was pushed, firstIndexToClear and lastIndexToClear define interval of invalidated indexes
+			bool pushSeq(seqNumber seq, seqNumber ack, double, int& firstIndexToClear, int& lastIndexToClear);
 
 			/// finds next index, which seq data are present in buffer
 			/// if last valid index is passed to this function, NSL_UNDEFINED_BUFFER_INDEX is returned
@@ -77,6 +77,14 @@ namespace nsl {
 			/// finds previous index, which seq data are present in buffer
 			/// if first valid index is passed to this function, NSL_UNDEFINED_BUFFER_INDEX is returned
 			int getPreviousValidIndex(int);
+
+			/// finds next index, 
+			/// 0 <= given index < NSL_PACKET_BUFFER_SIZE - otherwise result is NSL_UNDEFINED_BUFFER_INDEX
+			int getNextIndex(int);
+
+			/// finds previous index, 
+			/// 0 <= given index < NSL_PACKET_BUFFER_SIZE - otherwise result is NSL_UNDEFINED_BUFFER_INDEX
+			int getPreviousIndex(int);
 
 			/// seq comparator using modulo
 			/// compared by half of seq max value

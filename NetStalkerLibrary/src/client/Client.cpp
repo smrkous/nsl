@@ -31,7 +31,7 @@ namespace nsl {
 		i->close();
 	}
 
-	bool Client::updateNetwork(void)
+	ClientState Client::updateNetwork(void)
 	{
 		return i->updateNetwork();
 	}

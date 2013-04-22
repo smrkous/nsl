@@ -17,3 +17,14 @@ namespace nsl {
 	}	
 };
 #endif
+
+namespace nsl {
+	bool isLittleEndian(void) 
+	{
+#ifdef NSL_LITTLE_ENDIAN 
+		return true;
+#else
+		return false;
+#endif
+	}
+};

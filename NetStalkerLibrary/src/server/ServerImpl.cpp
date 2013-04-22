@@ -64,7 +64,7 @@ namespace nsl {
 					{
 						Peer* newPeer = new Peer(peer);
 						connectedPeers.insert(std::pair<unsigned int, Peer*>(peer->connectionId, newPeer));
-						if (!userObject->onClientConnect(peer->connectionId)) {
+						if (!userObject->onClientConnect(newPeer->getUserObject())) {
 							connectedPeers.erase(peer->connectionId);
 							connection.disconnect(peer);
 							delete newPeer;
@@ -76,7 +76,7 @@ namespace nsl {
 					{
 						std::map<unsigned int, Peer*>::iterator it = connectedPeers.find(peer->connectionId);
 						Peer* oldPeer = it->second;
-						userObject->onClientDisconnect(peer->connectionId);
+						userObject->onClientDisconnect(oldPeer->getUserObject());
 						connectedPeers.erase(it);
 						delete oldPeer;
 						delete stream;
@@ -108,9 +108,8 @@ namespace nsl {
 
 								while (msgSize != 0) {
 									if (newMessages) {
-										userStream = stream->createSubreader(msgSize);
-										userObject->onMessageAccept(peer->connectionId, userStream);
-										delete userStream;
+										userStream = stream->createSubreader(msgSize, false);
+										userObject->onMessageAccept(currentPeer->getUserObject(), userStream);
 									}
 									stream->skipBits(msgSize*8);
 									msgSize = stream->read<Attribute<customMessageSizeNumber> >();
@@ -129,7 +128,7 @@ namespace nsl {
 			while (NULL != (peer = connection.proccessTimeouts(currentTime))) {
 				std::map<unsigned int, Peer*>::iterator it = connectedPeers.find(peer->connectionId);
 				Peer* oldPeer = it->second;
-				userObject->onClientDisconnect(peer->connectionId);
+				userObject->onClientDisconnect(oldPeer->getUserObject());
 				connectedPeers.erase(it);
 				delete oldPeer;
 			}
@@ -145,7 +144,11 @@ namespace nsl {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to add object to scope out of context");
 			}
 
-			currentScope.insert(object->networkObject);
+			if (object->networkObject->getDestroyIndex() != NSL_UNDEFINED_BUFFER_INDEX) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to add already destroyed object to scope");
+			} else {
+				currentScope.insert(object->networkObject);
+			}
 		}
 
 		void ServerImpl::flushNetwork(void)
@@ -159,7 +162,7 @@ namespace nsl {
 				if (peer->hasAck()) {
 					seqNumber ack = peer->getLastAck();
 					if (!historyBuffer.isSeqInBounds(ack)) {
-						userObject->onClientDisconnect(peer->getPeerConnection()->connectionId);
+						userObject->onClientDisconnect(peer->getUserObject());
 						connectedPeers.erase(it++);
 						delete peer;
 						continue;
@@ -174,12 +177,14 @@ namespace nsl {
 				}
 
 				currentScopeAccessible = true;
-				if (!userObject->getScope(it->first)) {
+				if (!userObject->getScope(peer->getUserObject())) {
 					
 					// send all objects
 					currentScope.clear();
 					for (std::map<unsigned int, NetworkObject*>::iterator it2 = objectManager.objectsBegin(); it2 != objectManager.objectsEnd(); it2++) {
-						currentScope.insert(it2->second);
+						if (it2->second->getDestroyIndex() == NSL_UNDEFINED_BUFFER_INDEX) {
+							currentScope.insert(it2->second);
+						}
 					}
 
 				}
@@ -224,35 +229,34 @@ namespace nsl {
 
 					std::set<NetworkObject*>::iterator scopeObject = scope.find(o);
 					if (scopeObject == scope.end()) {
-						if (o->getDestroyIndex() == ackIndex) {
+						if (o->getDestroyIndex() == currentSeqIndex) {
 							stream->writeByte(NSL_OBJECT_FLAG_DELETE);
 						} else {
 							stream->writeByte(NSL_OBJECT_FLAG_OUT_OF_SCOPE);
 						}
 					} else {
 						scope.erase(scopeObject);
-						seqScope->push_back(o);
-
-						byte* newData;
-
 						stream->writeByte(NSL_OBJECT_FLAG_DIFF);
-						unsigned int byteSize = o->getObjectClass()->getByteSize();
-						byte* ackData = o->getDataBySeqIndex(ackIndex);
-						byte* currentData = o->getDataBySeqIndex(currentSeqIndex);
-						newData = new byte[byteSize];
-						
-						for (unsigned int i = 0; i < byteSize; i++) {
-							newData[i] = ackData[i] ^ currentData[i];
-						}
-
-						// TODO: NO_CHANGE flag?
-
-						// TODO: count ticks and sometimes call snapshot:
-						//stream->writeByte(NSL_OBJECT_FLAG_SNAPSHOT);
-						//newData = o->getDataBySeqIndex(currentSeqIndex);
-
-						writeObjectData(o->getObjectClass(), stream, newData);
+						seqScope->push_back(o);
 					}
+
+					byte* newData;	
+					unsigned int byteSize = o->getObjectClass()->getByteSize();
+					byte* ackData = o->getDataBySeqIndex(ackIndex);
+					byte* currentData = o->getDataBySeqIndex(currentSeqIndex);
+					newData = new byte[byteSize];
+						
+					for (unsigned int i = 0; i < byteSize; i++) {
+						newData[i] = ackData[i] ^ currentData[i];
+					}
+
+					// TODO: NO_CHANGE flag?
+
+					// TODO: count ticks and sometimes call snapshot:
+					//stream->writeByte(NSL_OBJECT_FLAG_SNAPSHOT);
+					//newData = o->getDataBySeqIndex(currentSeqIndex);
+
+					writeObjectData(o->getObjectClass(), stream, newData);
 				}
 			}
 
@@ -332,14 +336,15 @@ namespace nsl {
 			}
 		}
 
-		BitStreamWriter* ServerImpl::createCustomMessage(int peer, bool reliable)
+		BitStreamWriter* ServerImpl::createCustomMessage(nsl::Peer* peer, bool reliable)
 		{
-			std::map<unsigned int, Peer*>::iterator it = connectedPeers.find(peer);
+			/*std::map<unsigned int, Peer*>::iterator it = connectedPeers.find(peer);
 			if (it == connectedPeers.end()) {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to send message to non-existing peer");
-			}
+			}*/
 			BitStreamWriter* stream = new BitStreamWriter();
-			it->second->getNewCustomMessages().push_back(std::pair<BitStreamWriter*, bool>(stream, reliable));
+			//it->second->getNewCustomMessages().push_back(std::pair<BitStreamWriter*, bool>(stream, reliable));
+			peer->peer->getNewCustomMessages().push_back(std::pair<BitStreamWriter*, bool>(stream, reliable));
 			return stream;
 		}
 

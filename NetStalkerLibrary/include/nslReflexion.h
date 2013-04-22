@@ -22,7 +22,7 @@ namespace nsl {
 	/// It is strongly recommended to use only predefined basic attributes.
 	/// However, it is possible to pass anything - it will be cast using (byte*)&value.
 	template<class T>
-	class NSL_IMPORT_EXPORT Attribute
+	class Attribute
 	{
 	public:
 		/// Actual data type, which will be serialized and shared.
@@ -105,12 +105,12 @@ namespace nsl {
 			: id(classId), attributeMaxId(0) {}
 
 		/// Define attribute with default interpolation
-		template <class T> NSL_IMPORT_EXPORT
+		template <class T>
 		void defineAttribute(unsigned int attrId);
 
 		/// Define attribute with custom interpolation.
 		/// If NULL is passed instead if interpolation function, no interpolation will occure.
-		template <class T> NSL_IMPORT_EXPORT
+		template <class T>
 		void defineAttribute(unsigned int attrId, typename T::interpolationFunction interpolationFunction);
 	};
 

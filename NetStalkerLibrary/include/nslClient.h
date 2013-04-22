@@ -20,6 +20,20 @@ namespace nsl {
 		class NetworkObject;
 	};
 
+	/// State of client
+	enum ClientState {
+		/// server has not responded yet or it already closed the connection
+		NSL_CS_CLOSED,
+
+		/// server responded and the connection is being estabilished
+		NSL_CS_HANDSHAKING,
+
+		/// connection estabilished, but application updates wait for buffer to fill to their minimum
+		NSL_CS_BUFFERING,
+
+		/// connection fully estabilished, updates are being received and propagated to the application
+		NSL_CS_OPENED
+	};
 
 	/// Client side of shared object.
 	/// Interface provides data reading operations.
@@ -36,7 +50,7 @@ namespace nsl {
 
 		/// Get actual data of specific atribute.
 		/// If the attribute was defined as different type, the result is undefined and an exception might be thrown as well.
-		template<class T> NSL_IMPORT_EXPORT 
+		template<class T> 
 		typename T::Type get(unsigned int attrId);
 
 	private:
@@ -91,10 +105,9 @@ namespace nsl {
 		void close(void);
 
 		/// Process any data, which were received from network.
-		/// If true is returned, there is working connection and the data are actually updated.
-		/// If false is returned, connection is not responding, but trying to connect again.
+		/// Return current connection state
 		NSL_IMPORT_EXPORT
-		bool updateNetwork(void);
+		ClientState updateNetwork(void);
 		
 		/// Send all recent client messages to server.
 		/// This should be called as often as updateNetwork() for better connection performance.

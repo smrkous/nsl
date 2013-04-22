@@ -10,6 +10,7 @@ namespace nsl {
 };
 
 #include "../configuration.h"
+#include "../../include/nslServer.h"
 #include <vector>
 
 namespace nsl {
@@ -25,9 +26,11 @@ namespace nsl {
 			seqNumber customMessageSeq;
 			int firstUpdateIndex;
 			bool isAck;
+			nsl::Peer* userObject;
 		public:
 			Peer(PeerConnection* peer);
 			~Peer(void);
+			nsl::Peer* getUserObject(void);
 			PeerConnection* getPeerConnection(void);
 			seqNumber getCustomMessageSeq(void) {return customMessageSeq;}
 			void setCustomMessageSeq(seqNumber seq) {customMessageSeq = seq;}

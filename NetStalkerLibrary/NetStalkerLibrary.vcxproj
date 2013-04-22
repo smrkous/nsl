@@ -22,6 +22,7 @@
     <ClCompile Include="src\client\HistoryBuffer.cpp" />
     <ClCompile Include="src\client\NetworkObject.cpp" />
     <ClCompile Include="src\client\ObjectManager.cpp" />
+    <ClCompile Include="src\lz4\lz4.c" />
     <ClCompile Include="src\nsl.cpp" />
     <ClCompile Include="src\ObjectClassDefinition.cpp" />
     <ClCompile Include="src\server\Connection.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="src\server\Server.cpp" />
     <ClCompile Include="src\server\ServerImpl.cpp" />
     <ClCompile Include="src\server\ServerObject.cpp" />
+    <ClCompile Include="src\server\UserPeer.cpp" />
     <ClCompile Include="src\Socket.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +49,7 @@
     <ClInclude Include="src\client\NetworkObject.h" />
     <ClInclude Include="src\client\ObjectManager.h" />
     <ClInclude Include="src\configuration.h" />
+    <ClInclude Include="src\lz4\lz4.h" />
     <ClInclude Include="src\ObjectClassDefinition.h" />
     <ClInclude Include="src\server\Connection.h" />
     <ClInclude Include="src\server\HistoryBuffer.h" />
@@ -87,9 +90,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.dll</TargetExt>
+    <OutDir>$(SolutionDir)\..\build\</OutDir>
+    <TargetName>nsl</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>nsl</TargetName>
+    <OutDir>$(SolutionDir)\..\build\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

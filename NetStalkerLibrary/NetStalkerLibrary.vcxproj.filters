@@ -13,6 +13,12 @@
     <Filter Include="src\server">
       <UniqueIdentifier>{e653d000-0581-43a7-b1a3-e7a37da019db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{67ca03f2-ad94-4cd2-a466-4f05122abd03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lz4">
+      <UniqueIdentifier>{c179ea8d-826e-4ae7-b5e6-7d84b74cafc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BitStreamReader.cpp">
@@ -79,6 +85,12 @@
     <ClCompile Include="src\Socket.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\lz4\lz4.c">
+      <Filter>src\lz4</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\UserPeer.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\nsl.h">
@@ -140,6 +152,9 @@
     </ClInclude>
     <ClInclude Include="src\Socket.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lz4\lz4.h">
+      <Filter>src\lz4</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

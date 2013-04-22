@@ -18,7 +18,30 @@ namespace nsl {
 
 		/// Forward declaration of inner library class
 		class NetworkObject; 
+
+		/// Forward declaration of inner library class
+		class Peer;
 	}
+
+	/// class representing connected client
+	class Peer
+	{
+	public:
+		void* customPointer;
+
+		NSL_IMPORT_EXPORT
+		unsigned int getId(void);
+
+		NSL_IMPORT_EXPORT
+		const char* getIp(void);
+	private:
+		friend class server::Peer;
+		friend class server::ServerImpl;
+
+		Peer(server::Peer*);
+		~Peer(void);
+		server::Peer* peer;
+	};		
 
 	/// Server side of shared object.
 	/// Interface provides data writing operations.
@@ -37,7 +60,7 @@ namespace nsl {
 		/// Set actual data of specific atribute.
 		/// Valid attribute id and respective data type must be provided, 
 		/// otherwise exception might be thrown to prevent memmory leak or data values might be wrong.
-		template<class T> NSL_IMPORT_EXPORT
+		template<class T>
 		void set(unsigned int attrId, typename T::Type value) {set(attrId, typename T::getByteSize(), (byte*)&value);}
 
 		/// Delete this object from network space.
@@ -92,29 +115,29 @@ namespace nsl {
 		/// If the message should be send just within this update (f.e. in the next packet new fresh 
 		/// info will be sent and this message will be no longer relevant), set reliable to false
 		NSL_IMPORT_EXPORT
-		BitStreamWriter* createCustomMessage(int peer, bool reliable = true);
+		BitStreamWriter* createCustomMessage(Peer* peer, bool reliable = true);
 		
 		/// Callback on new client connection
 		/// Default - add object receiver
 		/// Returning false is considered as an authentication fail and connection is closed.
 		NSL_IMPORT_EXPORT
-		virtual bool onClientConnect(int peer);	
+		virtual bool onClientConnect(Peer* peer);	
 		
 		/// Callback on disconnect by client
 		/// Default - remove object receiver
 		NSL_IMPORT_EXPORT
-		virtual void onClientDisconnect(int peer);
+		virtual void onClientDisconnect(Peer* peer);
 
 		/// Callback on custom message arrival from client
 		/// Default - no action
 		NSL_IMPORT_EXPORT
-		virtual void onMessageAccept(int peer, BitStreamReader* stream);
+		virtual void onMessageAccept(Peer* peer, BitStreamReader* stream);
 
 		/// Callback for defining scope for one peer
 		/// If false is returned, scope is ignored and peer receives all objects (default)
 		/// If true is returned, peer will receive only objects from scope - add object to peer's scope by calling addToScope during this callback
 		NSL_IMPORT_EXPORT
-		virtual bool getScope(int peer);
+		virtual bool getScope(Peer* peer);
 				
 		/// Add object to peer's scope.
 		/// Callable only in body of getScope(...), otherwise exception is thrown.

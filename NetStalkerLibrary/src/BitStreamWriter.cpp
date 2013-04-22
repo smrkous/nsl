@@ -55,6 +55,11 @@ namespace nsl {
 		}
 	}
 
+	unsigned int BitStreamWriter::getByteSize(void)
+	{
+		return (currentByte - buffer) + (bitOffset > 0 ? 1 : 0);
+	}
+
 	unsigned int BitStreamWriter::getBitSize(void)
 	{
 		return (currentByte - buffer)*8 + bitOffset;
@@ -78,9 +83,11 @@ namespace nsl {
 
 	void BitStreamWriter::expand(unsigned int bitCount) 
 	{
-		byte* tmp = new byte[bufferLength*2 + bitCount/8 + 1];
+		int newBufferLength = bufferLength*2 + bitCount/8 + 1;
+		byte* tmp = new byte[newBufferLength];
 		memcpy(tmp, buffer, bufferLength);
-		currentByte = (currentByte - buffer) + tmp;
+		bufferLength = newBufferLength;
+		currentByte = tmp + (currentByte - buffer);
 		delete[] buffer;
 		buffer = tmp;
 	}

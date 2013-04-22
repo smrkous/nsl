@@ -13,24 +13,6 @@
 
 namespace nsl {
 
-	/* Endianity recognition */
-
-	#if !defined(NSL_BIG_ENDIAN) && !defined(NSL_LITTLE_ENDIAN)
-		#if defined(__BYTE_ORDER__)
-			#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-				#define NSL_LITTLE_ENDIAN
-			#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-				#define NSL_BIG_ENDIAN
-			#endif
-		#elif defined(_M_IX86) || defined(i386)
-			#define NSL_LITTLE_ENDIAN
-		#elif defined(__ppc__) || defined(__powerpc__) || defined (PPC)
-			#define NSL_BIG_ENDIAN
-		#else
-			#error "NSL: Endianity not recognized, must be specified manualy by defining macros NSL_BIG_ENDIAN or NSL_LITTLE_ENDIAN"
-		#endif
-	#endif
-
 	/* server configuration */
 
 	#define NSL_PACKET_BUFFER_SIZE_SERVER 50
@@ -48,22 +30,25 @@ namespace nsl {
 
 	/* common configuration */
 
+	#define NSL_COMPRESS	// should be sockets compressed?
+
 	#define NSL_SEQ_MODULO 65535
 	typedef unsigned short seqNumber;
 
 	#define MAX_PACKET_SIZE 1000
 
-	#define NSL_CONNECTION_FLAG_UPDATE 1
-	#define NSL_CONNECTION_FLAG_DISCONNECT 2
-	#define NSL_CONNECTION_FLAG_HANDSHAKE 3
+	#define NSL_CONNECTION_FLAG_DISCONNECT 1
+	#define NSL_CONNECTION_FLAG_HANDSHAKE 2
+	#define NSL_CONNECTION_FLAG_UPDATE 3
+	#define NSL_CONNECTION_FLAG_COMPRESSED_UPDATE 4
 
 	#define NSL_TIMEOUT_CLIENT_CONNECTION_REQUEST 0.5
 	#define NSL_TIMEOUT_CLIENT_HANDSHAKE 0.5
 	#define NSL_TIMEOUT_SERVER_HANDSHAKE_RESEND 0.5
-	#define NSL_TIMEOUT_SERVER_HANDSHAKE_KILL 500
-	#define NSL_TIMEOUT_SERVER_CONNECTED_KILL 500
+	#define NSL_TIMEOUT_SERVER_HANDSHAKE_KILL 5
+	#define NSL_TIMEOUT_SERVER_CONNECTED_KILL 5
 
-	//#define PACKET_LOSS_RATE 30				// percentage of lost packets (simulated for debug purposes)
+	#define PACKET_LOSS_RATE 30				// percentage of lost packets (simulated for debug purposes)
 
 	#define NSL_OBJECT_FLAG_END_OF_SECTION 0
 

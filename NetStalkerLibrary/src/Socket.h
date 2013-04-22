@@ -21,7 +21,7 @@ namespace nsl {
 
 	inline bool initializeSockets()
 	{
-		#ifdef PLATFORM_WINDOWS
+		#ifdef NSL_PLATFORM_WINDOWS
 	    WSADATA WsaData;
 		return WSAStartup( MAKEWORD(2,2), &WsaData ) != NO_ERROR;
 		#else
@@ -31,7 +31,7 @@ namespace nsl {
 
 	inline void shutdownSockets()
 	{
-		#ifdef PLATFORM_WINDOWS
+		#ifdef NSL_PLATFORM_WINDOWS
 		WSACleanup();
 		#endif
 	}
@@ -43,7 +43,7 @@ namespace nsl {
 	public:
 		Socket(void);
 		~Socket(void);
-		bool open( unsigned short port );
+		void open( unsigned short port );
 		void close(void);
 		bool isOpen(void) const;
 		bool send( const sockaddr_in destination, const void * data, int size );

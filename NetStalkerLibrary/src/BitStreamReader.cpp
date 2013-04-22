@@ -4,16 +4,20 @@
 
 namespace nsl {
 
-	BitStreamReader::BitStreamReader(byte* data, unsigned int dataSize)
+	BitStreamReader::BitStreamReader(byte* data, unsigned int dataSize, bool bound)
 	{
 		this->buffer = data;
 		this->bufferLength = dataSize;
 		this->bitOffset = 0;
 		this->currentByte = data;
+		this->bound = bound;
 	}
 
 	BitStreamReader::~BitStreamReader(void)
 	{
+		if (bound) {
+			delete[] buffer;
+		}
 	}
 
 	bool BitStreamReader::isSpaceFor(unsigned int bitCount) 
@@ -28,11 +32,24 @@ namespace nsl {
 		}
 	}
 
-	BitStreamReader* BitStreamReader::createSubreader(unsigned int byteSize)
+	bool BitStreamReader::isBound(void)
+	{
+		return bound;
+	}
+
+	BitStreamReader* BitStreamReader::createSubreader(unsigned int byteSize, bool copyData)
 	{
 		checkSpace(byteSize*8);
 
-		BitStreamReader* subreader = new BitStreamReader(currentByte, byteSize);
+		byte* data;
+		if (copyData) {
+			data = new byte[byteSize];
+			memcpy(data, currentByte, byteSize);
+		} else {
+			data = currentByte;
+		}
+
+		BitStreamReader* subreader = new BitStreamReader(data, byteSize, copyData);
 		if (bitOffset > 0) {
 			subreader->bitOffset = bitOffset;
 			subreader->bufferLength++;
@@ -93,9 +110,9 @@ namespace nsl {
 		if(!bitOffset) 
 		{
 			#ifdef NSL_BIG_ENDIAN
-				byteSize--;
-				for(; byteSize >= 0; byteSize--) {
-					*(value+byteSize) = *currentByte++;
+				int index = byteSize - 1;
+				for(; index >= 0; index--) {
+					*(value+index) = *(currentByte++);
 				}
 			#else
 				memcpy(value, currentByte, byteSize);
@@ -131,6 +148,19 @@ namespace nsl {
 		} else {
 			return (bufferLength - (currentByte - buffer));
 		}
+	}
+
+	void BitStreamReader::resetStream(unsigned int newStreamSize)
+	{
+		currentByte = buffer;
+		if (newStreamSize != 0) {
+			bufferLength = newStreamSize;
+		}
+	}
+
+	void BitStreamReader::destroy(void)
+	{
+		delete this;
 	}
 
 };

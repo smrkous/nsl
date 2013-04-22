@@ -24,9 +24,11 @@ namespace nsl {
 		close();
 	}
 
-	bool Socket::open( unsigned short port )
+	void Socket::open( unsigned short port )
 	{
-		assert( !isOpen() );
+		if (isOpen()) {
+			throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: opening already opened socket" );
+		}
 
 		// create socket
 
@@ -35,8 +37,7 @@ namespace nsl {
 		if ( socket <= 0 )
 		{
 			socket = 0;
-			return false;
-			//throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: failed to create socket" );
+			throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: failed to create socket" );
 		}
 
 		// bind to port
@@ -50,8 +51,7 @@ namespace nsl {
 		{
 			socket = 0;
 			close();
-			return false;
-			//throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: failed to bind socket" );
+			throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: failed to bind socket" );
 		}
 
 		// set non-blocking io
@@ -66,12 +66,8 @@ namespace nsl {
 			{
 		#endif
 				close();
-				return false;
-				//throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: failed to set non-blocking socket" );
+				throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: failed to set non-blocking socket" );
 			}
-
-
-		return true;
 	}
 
 	void Socket::close()

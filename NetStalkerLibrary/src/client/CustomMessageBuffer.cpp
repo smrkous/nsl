@@ -44,6 +44,7 @@ namespace nsl {
 			}
 
 			currentIndex = targetIndex;
+			currentSeq = (currentSeq + 1) % NSL_SEQ_MODULO;
 			if (!isIndexEmpty(currentIndex)) {
 				for (std::vector<std::pair<byte*, unsigned int> >::iterator it = bufferedMessagesBegin(currentIndex); it != bufferedMessagesEnd(currentIndex); it++) {
 					delete[] it->first;

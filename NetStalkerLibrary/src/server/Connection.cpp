@@ -51,9 +51,7 @@ namespace nsl {
 			}
 
 			// try start accepting connections
-			if (!socket.open(serverPort)) {
-				throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: connection open attemp failed.");
-			}
+			socket.open(serverPort);
 
 			state = OPENED;
 		}
@@ -240,11 +238,35 @@ namespace nsl {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to send packet to not connected peer.");
 			}
 
+#ifdef NSL_COMPRESS
+			unsigned int streamByteSize = packet->stream->getByteSize();
+			byte* data = new byte[streamByteSize];
+			unsigned int bytesAfterCompression = LZ4_compress_limitedOutput((const char*)packet->stream->buffer + 7, (char*)data + 7, streamByteSize - 7, streamByteSize - 7);
+			if (bytesAfterCompression == 0) {
+				// compression failed to make socket smaller, send it raw
+				socket.send(
+					packet->peer->connectedAddress, 
+					packet->stream->buffer, 
+					streamByteSize
+				);
+			} else {
+				// send compressed update
+				memcpy(data, packet->stream->buffer, 6);
+				data[6] = NSL_CONNECTION_FLAG_COMPRESSED_UPDATE;
+				socket.send(
+					packet->peer->connectedAddress, 
+					data, 
+					bytesAfterCompression + 7
+				);
+			}
+			
+#else
 			socket.send(
 				packet->peer->connectedAddress, 
 				packet->stream->buffer, 
 				packet->stream->currentByte - packet->stream->buffer
 			);
+#endif
 		}
 
 		void Connection::sendHandshake(sockaddr_in address, unsigned int connectionId)

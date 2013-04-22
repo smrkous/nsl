@@ -54,7 +54,23 @@ namespace nsl {
 			return distanceFromLastIndex > 0 && distanceFromLastIndex < NSL_PACKET_BUFFER_SIZE - neccessaryIndexBeforeNetworkCount;
 		}
 
-		bool HistoryBuffer::pushSeq(seqNumber seq, seqNumber ack, double time, ObjectManager* objectManager)
+		int HistoryBuffer::getPreviousIndex(int index)
+		{
+			if (index < 0 || index >= NSL_PACKET_BUFFER_SIZE) {
+				return NSL_UNDEFINED_BUFFER_INDEX;
+			}
+			return (index - 1 + NSL_PACKET_BUFFER_SIZE) % NSL_PACKET_BUFFER_SIZE;
+		}
+
+		int HistoryBuffer::getNextIndex(int index)
+		{
+			if (index < 0 || index >= NSL_PACKET_BUFFER_SIZE) {
+				return NSL_UNDEFINED_BUFFER_INDEX;
+			}
+			return (index + 1) % NSL_PACKET_BUFFER_SIZE;
+		}
+
+		bool HistoryBuffer::pushSeq(seqNumber seq, seqNumber ack, double time, int& firstIndexToClear, int& lastIndexToClear)
 		{
 			// is ack missing in buffer?
 			if (ack != seq && (!isSeqInBounds(ack) || !isIndexValid(seqToIndex(ack)))) {
@@ -66,12 +82,13 @@ namespace nsl {
 				// we search in future, so we cannot use seqToIndex, because it works only for seqs in buffer bounds
 				int index = (networkIndex + (seq - lastSeq + NSL_SEQ_MODULO) % NSL_SEQ_MODULO) % NSL_PACKET_BUFFER_SIZE;
 
-				// invalidate all skipped data
+				// invalidate all skipped data (only if there are some)
 				// isSeqAwaited returns false for seq = lastSeq, so index != lastIndex now
 				networkIndex = (networkIndex + 1) % NSL_PACKET_BUFFER_SIZE;
+				firstIndexToClear = networkIndex;
+				lastIndexToClear = index;
 				while (networkIndex != index) {
 					validData[networkIndex] = false;
-					objectManager->clearBufferIndex(networkIndex);
 					// invalidate first index, if rewritten
 					if (firstDataIndex == networkIndex) {
 						firstDataIndex = NSL_UNDEFINED_BUFFER_INDEX;
@@ -94,8 +111,8 @@ namespace nsl {
 				timeData[networkIndex] = time;
 				lastSeq = seq;
 
-				// update ack index
-				if (networkAckIndex == NSL_UNDEFINED_BUFFER_INDEX || isSecondSeqGreater(indexToSeq(networkAckIndex), ack)) {
+				// update ack index - for initial packets with seq=ack set ack only for the first time
+				if (networkAckIndex == NSL_UNDEFINED_BUFFER_INDEX || (seq != ack && isSecondSeqGreater(indexToSeq(networkAckIndex), ack))) {
 					networkAckIndex = seqToIndex(ack);
 				}
 
@@ -113,9 +130,12 @@ namespace nsl {
 					timeData[index] = time;
 
 					// update ack index
-					if (isSecondSeqGreater(indexToSeq(networkAckIndex), ack)) {
+					if (seq != ack && isSecondSeqGreater(indexToSeq(networkAckIndex), ack)) {
 						networkAckIndex = seqToIndex(ack);
 					}
+
+					firstIndexToClear = NSL_UNDEFINED_BUFFER_INDEX;
+					lastIndexToClear = NSL_UNDEFINED_BUFFER_INDEX;
 
 					updateNeccessaryIndexCount();
 					validUpdatesCounter++;
@@ -222,6 +242,9 @@ namespace nsl {
 
 		int HistoryBuffer::getFirstNeccessaryIndex(void)
 		{
+			if (isEmpty()) {
+				return NSL_UNDEFINED_BUFFER_INDEX;
+			}
 			return (networkIndex - neccessaryIndexBeforeNetworkCount + NSL_PACKET_BUFFER_SIZE) % NSL_PACKET_BUFFER_SIZE;
 		}
 

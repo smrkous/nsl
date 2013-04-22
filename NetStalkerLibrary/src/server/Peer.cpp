@@ -7,6 +7,7 @@ namespace nsl {
 		Peer::Peer(PeerConnection* peer) : peerConnection(peer)
 		{
 			customMessageSeq = 0;
+			userObject = new nsl::Peer(this);
 			isAck = false;
 			firstUpdateIndex = NSL_UNDEFINED_BUFFER_INDEX;
 		}
@@ -15,6 +16,12 @@ namespace nsl {
 		{
 			// TODO	where to delete this struct?
 			delete peerConnection;
+			delete userObject;
+		}
+
+		nsl::Peer* Peer::getUserObject(void)
+		{
+			return userObject;
 		}
 
 		PeerConnection* Peer::getPeerConnection(void)

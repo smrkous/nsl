@@ -27,26 +27,43 @@ namespace nsl {
 	class BitStreamReader
 	{
 	private:
+		friend class client::Connection;
+
 		byte* buffer;
 		unsigned int bufferLength;
 		byte* currentByte;	// the first byte with at least 1 unread bit
 		unsigned char bitOffset; // the first unread bit in a byte (0-7)
+		bool bound;
 
 		bool isSpaceFor(unsigned int bitCount);
 		void checkSpace(unsigned int bitCount);
+
 	public:
 
 		/// Creates BitStream operating over external buffer
+		/// If bount is set to false, reader will just read its data in correct format.
+		/// If it is set to true, reader will take care of the buffer entirely (deletion etc.)
 		NSL_IMPORT_EXPORT
-		BitStreamReader(byte* data, unsigned int dataSize);
+		BitStreamReader(byte* data, unsigned int dataSize, bool bound = false);
 
-		/// Buffer passed in constructor is never deleted
+		/// If buffer was not bound to stream, it won't be deleted
 		NSL_IMPORT_EXPORT
 		~BitStreamReader(void);
 
+		/// If you manualy created subreader, the stream memmory was created in library -> destroy the stream by calling this
+		/// Do not call on any reader passed by library! Library manages deletion on its own.
+		NSL_IMPORT_EXPORT
+		void destroy(void);
+
+		/// Is buffer bound to this reader? (will it be deleted upon stream deletion?)
+		NSL_IMPORT_EXPORT
+		bool isBound(void);
+
 		/// Creates new reader starting at current position and containing only specified amount of data
 		/// Old (this) reader will remain unchanged (current position won't change)
-		BitStreamReader* createSubreader(unsigned int byteSize);
+		/// if copyData is set to false, new reader will share buffer with the old one
+		NSL_IMPORT_EXPORT
+		BitStreamReader* createSubreader(unsigned int byteSize, bool copyData = false);
 
 		/// Read single bit from the stream. If the stream contains no more data, exception is thrown.
 		NSL_IMPORT_EXPORT
@@ -57,7 +74,7 @@ namespace nsl {
 		byte readByte(void);
 
 		/// Read defined attribute from the stream. If the stream contains no more data, exception is thrown.
-		template<class T> NSL_IMPORT_EXPORT
+		template<class T>
 		typename T::Type read(void) throw (Exception) {typename T::Type value; read(T::getByteSize(), (byte *)(&value)); return value;};
 
 		/// Read raw data from the stream. If the stream contains no more data, exception is thrown.
@@ -71,6 +88,11 @@ namespace nsl {
 		/// Skip given amount of bits, which is much more performance effective then reading and not using them
 		NSL_IMPORT_EXPORT
 		void skipBits(unsigned int);
+
+		// Move internal counter to the beginning of the stream, so its data may be read again
+		// If new streamSize is 0, old streamSize will be used
+		NSL_IMPORT_EXPORT
+		void resetStream(unsigned int newStreamSize = 0);
 	};
 
 	#define BIT_STREAM_INIT_SIZE 30
@@ -119,6 +141,10 @@ namespace nsl {
 		NSL_IMPORT_EXPORT
 		unsigned int getBitSize(void);
 
+		/// Get number of bytes which have at least one filled bit
+		NSL_IMPORT_EXPORT
+		unsigned int getByteSize(void);
+
 		/// Get copy of internal buffer (only filled part of it)
 		/// If there reamin any empty bits in the last byte, it won't be noted
 		NSL_IMPORT_EXPORT
@@ -133,7 +159,7 @@ namespace nsl {
 		void writeByte(byte);
 		
 		/// Write defined attribute into the stream. If the buffer is external and overflows, exception is thrown.
-		template<class T> NSL_IMPORT_EXPORT
+		template<class T>
 		void write(typename T::Type value) throw (Exception) {write(T::getByteSize(), (byte *)(&value));}
 
 		/// Write raw data into the stream. If the buffer is external and overflows, exception is thrown.

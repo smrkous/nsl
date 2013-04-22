@@ -7,6 +7,9 @@ namespace nsl {
 
 #include "../configuration.h"
 #include "../Socket.h"
+#ifdef NSL_COMPRESS
+#include "../lz4/lz4.h"
+#endif
 #include <map>
 
 namespace nsl {
