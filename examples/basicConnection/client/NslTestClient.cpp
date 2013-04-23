@@ -94,6 +94,8 @@ int main(int argc, char * argv[])
 				std::cout << " [" << it->first << "]:" << it->second->get<nsl::uint32>(MY_UINT);
 			}
 			std::cout << "\n";
+			nsl::BitStreamWriter * cmw = client.createCustomMessage(true);
+			*cmw << value << 3.2f << "pejsek";
 			client.flushNetwork();
 			Sleep(400);
 		}

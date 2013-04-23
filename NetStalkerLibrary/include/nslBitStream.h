@@ -160,7 +160,7 @@ namespace nsl {
 		
 		/// Write defined attribute into the stream. If the buffer is external and overflows, exception is thrown.
 		template<class T>
-		void write(typename T::Type value) throw (Exception) {write(T::getByteSize(), (byte *)(&value));}
+		void write(const typename T::Type & value) throw (Exception) {write(T::getByteSize(), (byte *)(&value));}
 
 		/// Write raw data into the stream. If the buffer is external and overflows, exception is thrown.
 		NSL_IMPORT_EXPORT
@@ -171,3 +171,19 @@ namespace nsl {
 		int getRemainingByteSize(void);
 	};
 };
+
+#include <string>
+
+template <class T>
+inline nsl::BitStreamWriter & operator<<(nsl::BitStreamWriter & w, const T& v) {
+	w.write<nsl::Attribute<T> >(v);
+	return w;
+}
+
+template <>
+inline nsl::BitStreamWriter & operator<<(nsl::BitStreamWriter & w, const std::string & str) {
+	for(int i = 0; i < str.length(); ++i)
+		w.write<nsl::int8>(str[i]);
+	return w;
+}
+
