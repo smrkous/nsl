@@ -72,4 +72,6 @@ namespace nsl {
 	#ifdef NSL_LOG_PACKETS
 		void logBytes(byte* data, unsigned int size);
 	#endif
+
+	double getTime();
 };

@@ -21,11 +21,6 @@ namespace nsl {
 			close();
 		}
 
-		double ClientImpl::getTime(void)
-		{
-			return ((double)clock())/CLOCKS_PER_SEC;
-		}
-
 		void ClientImpl::close(void) 
 		{
 			connection.close();

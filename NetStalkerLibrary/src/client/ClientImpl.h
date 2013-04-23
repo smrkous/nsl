@@ -13,7 +13,6 @@ namespace nsl {
 #include "CustomMessageBuffer.h"
 #include "Connection.h"
 #include "../../include/nslClient.h"
-#include <time.h>
 #include <deque>
 
 namespace nsl {
@@ -37,7 +36,6 @@ namespace nsl {
 			/// Append all custom messages from given index
 			void pushBufferedMessagesByIndex(BitStreamWriter* stream, int bufferIndex);
 
-			double getTime(void);
 			void proccessUpdatePacket(BitStreamReader* stream);
 
 			/// proccess data of new object from stream

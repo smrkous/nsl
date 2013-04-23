@@ -1,5 +1,6 @@
 // Defines the exported functions for the DLL application.
 
+#include <time.h>
 #include "configuration.h"
 
 #ifdef NSL_LOG_PACKETS
@@ -25,6 +26,17 @@ namespace nsl {
 		return true;
 #else
 		return false;
+#endif
+	}
+
+	double getTime()
+	{
+#ifdef NSL_PLATFORM_WINDOWS
+		return ((double)clock())/CLOCKS_PER_SEC;
+#else
+		struct timespec ts;
+		clock_gettime(CLOCK_MONOTONIC, &ts);
+		return double(ts.tv_sec) + double(ts.tv_nsec) * 1e-9;
 #endif
 	}
 };

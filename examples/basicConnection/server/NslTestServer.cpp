@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "nslServer.h"
 #include <iostream>
+#include <cstdio>
 #if defined( __WIN32__ ) || defined( WIN32 ) || defined( _WIN32 )
 #include <windows.h>
 #else
@@ -38,7 +39,7 @@ int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char * argv[])
 #endif
 {
-	try {
+	//try {
 	enum ATTRS {MY_UINT, MY_UINT2, MY_UINT3, MY_UINT4, MY_UINT5, MY_UINT6, MY_UINT7};
 	enum OBJECTS {MY_TEST_OBJECT};
 
@@ -106,15 +107,15 @@ int main(int argc, char * argv[])
 	}
 
 	server.close();
-	} catch (nsl::Exception e) {
-		std::cout << "Exception has been thrown: ";
-		std::cout << e.what();
-		std::getchar();
-	} catch (std::exception e) {
-		std::cout << "Exception has been thrown: ";
-		std::cout << e.what();
-		std::getchar();
-	}
+	//} catch (nsl::Exception e) {
+	//	std::cout << "Exception has been thrown: ";
+	//	std::cout << e.what() << std::endl;
+	//	std::getchar();
+	//} catch (std::exception e) {
+	//	std::cout << "Exception has been thrown: ";
+	//	std::cout << e.what() << std::endl;
+	//	std::getchar();
+	//}
 
 	return 0;
 }

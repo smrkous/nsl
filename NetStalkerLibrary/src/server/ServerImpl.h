@@ -16,7 +16,6 @@ namespace nsl {
 #include "Connection.h"
 #include "ObjectManager.h"
 #include "HistoryBuffer.h"
-#include <time.h>
 #include <map>
 #include <set>
 
@@ -31,7 +30,6 @@ namespace nsl {
 			HistoryBuffer historyBuffer;
 			Server* userObject;
 			bool opened;
-			double getTime(void);
 			std::map<unsigned int, Peer*> connectedPeers;
 			std::set<NetworkObject*> currentScope;
 			bool currentScopeAccessible;

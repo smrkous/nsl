@@ -96,7 +96,7 @@ namespace nsl {
 	{
 		if (!isSpaceFor(bitCount)) {
 			if (this->externalBuffer) {
-				throw new Exception(NSL_EXCEPTION_USAGE_ERROR, "External buffer overflowed");
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "External buffer overflowed");
 			} else {
 				expand(bitCount);
 			}

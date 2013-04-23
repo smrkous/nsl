@@ -73,17 +73,17 @@ int main(int argc, char * argv[])
 
 	while(true) {
 		nsl::ClientState clientState = client.updateNetwork();
-		if (clientState != nsl::ClientState::NSL_CS_OPENED) {
+		if (clientState != nsl::NSL_CS_OPENED) {
 			switch(clientState) {
-			case nsl::ClientState::NSL_CS_CLOSED:
+			case nsl::NSL_CS_CLOSED:
 				std::cout << "Connecting...\n";
 				Sleep(1000);
 				break;
-			case nsl::ClientState::NSL_CS_HANDSHAKING:
+			case nsl::NSL_CS_HANDSHAKING:
 				std::cout << "Handshaking...\n";
 				Sleep(400);
 				break;			
-			case nsl::ClientState::NSL_CS_BUFFERING:
+			case nsl::NSL_CS_BUFFERING:
 				std::cout << "Buffering data...\n";
 				Sleep(400);
 				break;

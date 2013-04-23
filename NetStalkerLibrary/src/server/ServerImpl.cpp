@@ -41,11 +41,6 @@ namespace nsl {
 			return objectManager.createObject(classId, &historyBuffer);
 		}
 
-		double ServerImpl::getTime(void)
-		{
-			return ((double)clock())/CLOCKS_PER_SEC;
-		}
-
 		void ServerImpl::updateNetwork(void)
 		{
 			if (!connection.isOpened()) {

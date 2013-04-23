@@ -2,6 +2,8 @@
 
 #include "src/configuration.h"
 
+#if defined NSL_PLATFORM_WINDOWS
+
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
@@ -17,4 +19,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	}
 	return TRUE;
 }
+
+#endif
 

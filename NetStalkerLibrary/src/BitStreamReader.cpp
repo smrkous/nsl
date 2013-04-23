@@ -28,7 +28,7 @@ namespace nsl {
 	void BitStreamReader::checkSpace(unsigned int bitCount)
 	{
 		if (!isSpaceFor(bitCount)) {
-			throw new Exception(NSL_EXCEPTION_USAGE_ERROR, "BitStream contains not enough data.");
+			throw Exception(NSL_EXCEPTION_USAGE_ERROR, "BitStream contains not enough data.");
 		}
 	}
 

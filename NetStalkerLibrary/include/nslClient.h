@@ -156,7 +156,7 @@ namespace nsl {
 
 		if (!get(
 			attrId, 
-			typename T::getByteSize(), 
+			T::getByteSize(),
 			pointCount,
 			data,
 			times,

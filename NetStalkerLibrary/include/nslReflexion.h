@@ -8,6 +8,7 @@
 #include "nsl.h"
 #include <vector>
 #include <algorithm>
+#include <stdint.h>
 
 namespace nsl {
 
@@ -59,17 +60,14 @@ namespace nsl {
 
 	/// Predefined basic attributes
 
-	typedef Attribute<char> int8;
-	typedef Attribute<unsigned char> uint8;
-	typedef Attribute<short> int16;
-	typedef Attribute<unsigned short> uint16;
-	#ifdef IS_64_BIT
-	typedef Attribute<int> int32;
-	typedef Attribute<unsigned int> uint32;
-	#else
-	typedef Attribute<long> int32;
-	typedef Attribute<unsigned long> uint32;
-	#endif
+	typedef Attribute<int8_t> int8;
+	typedef Attribute<uint8_t> uint8;
+	typedef Attribute<int16_t> int16;
+	typedef Attribute<uint16_t> uint16;
+	typedef Attribute<int32_t> int32;
+	typedef Attribute<uint32_t> uint32;
+	typedef Attribute<int64_t> int64;
+	typedef Attribute<uint64_t> uint64;
 	typedef Attribute<float> float32;
 	typedef Attribute<double> double64;
 

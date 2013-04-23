@@ -1,51 +1,9 @@
-project(netstalker)
 
-set(NS_HEADERS
-  include/nsl.h
-  include/nslReflexion.h
-  include/nslBitStream.h
-  include/nslClient.h
-  include/nslServer.h
-)
-
-set(NS_SOURCES
-  src/common.h
-  src/nsl.cpp
-  src/BitStreamReader.cpp
-  src/BitStreamWriter.cpp
-  src/ObjectClassDefinition.h
-  src/ObjectClassDefinition.cpp
-  src/Socket.h
-  src/Socket.cpp
-  src/client/Client.cpp
-  src/client/ClientObject.cpp
-  src/client/ClientImpl.h
-  src/client/ClientImpl.cpp
-  src/client/Connection.h
-  src/client/Connection.cpp
-  src/client/CustomMessageBuffer.h
-  src/client/CustomMessageBuffer.cpp
-  src/client/HistoryBuffer.h
-  src/client/HistoryBuffer.cpp
-  src/client/NetworkObject.h
-  src/client/NetworkObject.cpp
-  src/client/ObjectManager.h
-  src/client/ObjectManager.cpp
-  src/server/Server.cpp
-  src/server/ServerObject.cpp
-  src/server/ServerImpl.h
-  src/server/ServerImpl.cpp
-  src/server/Connection.h
-  src/server/Connection.cpp
-  src/server/HistoryBuffer.h
-  src/server/HistoryBuffer.cpp
-  src/server/NetworkObject.h
-  src/server/NetworkObject.cpp
-  src/server/ObjectManager.h
-  src/server/ObjectManager.cpp
-  src/server/Peer.h
-  src/server/Peer.cpp
-)
+file(GLOB_RECURSE NS_HEADERS *.h)
+file(GLOB_RECURSE NS_SOURCES *.cpp *.c)
 
 add_definitions(-DHAS_SOCKLEN_T)
 add_library(netstalker SHARED ${NS_HEADERS} ${NS_SOURCES})
+if(${UNIX})
+  target_link_libraries(netstalker rt)
+endif()
