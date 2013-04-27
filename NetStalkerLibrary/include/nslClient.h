@@ -53,6 +53,9 @@ namespace nsl {
 		template<class T> 
 		typename T::Type get(unsigned int attrId);
 
+		/// Pointer to custom data
+		void* customData;
+
 	private:
 		friend class client::NetworkObject;
 
@@ -83,7 +86,7 @@ namespace nsl {
 	public:
 		/// Define client side port and unique application identifier
 		NSL_IMPORT_EXPORT
-		Client(unsigned short applicationId, unsigned short clientPort);
+		Client(unsigned short applicationId);
 
 		/// Delete client and stop all of its work. All related network objects and streams will be deleted as well.
 		NSL_IMPORT_EXPORT
@@ -98,7 +101,7 @@ namespace nsl {
 		/// This operation is non-blocking, so the connection won't open immediately.
 		/// Try to updateNetwork() until true is received or until you decide to close().
 		NSL_IMPORT_EXPORT
-		void open(unsigned short port, const char* address);
+		void open(const char* address, const char* port, const char* clientPort = NULL);
 
 		/// Close the connection.
 		NSL_IMPORT_EXPORT
@@ -106,8 +109,10 @@ namespace nsl {
 
 		/// Process any data, which were received from network.
 		/// Return current connection state
+		/// Library manages time on its own, hovewer, it is possible to specify the time by application (only positive numbers are accepted).
+		/// Library works with seconds (in double format), if you pass time manually in server and client both, you can choose another precission.
 		NSL_IMPORT_EXPORT
-		ClientState updateNetwork(void);
+		ClientState updateNetwork(double time = 0);
 		
 		/// Send all recent client messages to server.
 		/// This should be called as often as updateNetwork() for better connection performance.
@@ -117,7 +122,7 @@ namespace nsl {
 		/// Callback on new incomming object.
 		/// objectBirth = false -> object existed before, now it just got into scope
 		NSL_IMPORT_EXPORT
-		virtual void onCreate(ClientObject* object, bool objectBirth) = 0;
+		virtual void onCreate(ClientObject* object, bool objectBirth, BitStreamReader* creationMetaData) = 0;
 
 		/// Callback on object deletion.
 		/// objectDeath = false -> object is not really destoryed, it just left scope

@@ -30,7 +30,9 @@ namespace nsl {
 			HistoryBuffer historyBuffer;
 			Server* userObject;
 			bool opened;
+			double lastUpdateTime;
 			std::map<unsigned int, Peer*> connectedPeers;
+			std::map<unsigned int, BitStreamWriter*> unproccessedCreationCustomMessages;
 			std::set<NetworkObject*> currentScope;
 			bool currentScopeAccessible;
 
@@ -39,11 +41,11 @@ namespace nsl {
 			void sendUpdateToPeer(Peer* peer, std::set<NetworkObject*>& scope, int ackIndex);
 			void writeObjectData(ObjectClassDefinition* objectClass, BitStreamWriter* stream, byte* data);
 		public:
-			ServerImpl(Server* userObject, unsigned int applicationId, unsigned short port);
+			ServerImpl(Server* userObject, unsigned int applicationId);
 			~ServerImpl(void);
 
 			// opens connection on specified port, must be done before any communication
-			void open(void);
+			void open(const char* port = NULL);
 
 			// close all opened connections and all network activity
 			void close(void);
@@ -54,10 +56,13 @@ namespace nsl {
 			// create networked object of given type
 			NetworkObject* createObject(unsigned int classId);
 
+			// create networked object of given type and with additional creation metadata
+			NetworkObject* createObject(unsigned int classId, BitStreamWriter*& creationMetaData);
+
 			// send custom message to specified adress
 			BitStreamWriter* createCustomMessage(nsl::Peer* peer, bool reliable);
 
-			void updateNetwork(void);
+			void updateNetwork(double time = 0);
 
 			/// add object to current scope
 			/// if current scope is null, exception is thrown

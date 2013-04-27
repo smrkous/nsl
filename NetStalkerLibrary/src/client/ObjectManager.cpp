@@ -85,11 +85,18 @@ namespace nsl {
 
 						if (create) {
 							it->second->beforeApplicationCreate();
-							userObject->onCreate(it->second->getClientObject(), it->second->getBirthBySeqIndex(currentIndex));
+							userObject->onCreate(
+								it->second->getClientObject(), 
+								it->second->getBirthBySeqIndex(currentIndex), 
+								it->second->getCreationCustomMessage()
+							);
 						}
 
 						if (destroy) {
-							userObject->onDestroy(it->second->getClientObject(), it->second->getDeathBySeqIndex(currentIndex));
+							userObject->onDestroy(
+								it->second->getClientObject(), 
+								it->second->getDeathBySeqIndex(currentIndex)
+							);
 							it->second->afterApplicationDestroy();
 						}
 					}

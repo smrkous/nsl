@@ -31,7 +31,7 @@ namespace nsl {
 
 		/* Connection */
 
-		Connection::Connection(unsigned short applicationId, unsigned short serverPort) 
+		Connection::Connection(unsigned short applicationId) 
 			: applicationId(applicationId), serverPort(serverPort)
 		{
 			state = CLOSED;
@@ -44,14 +44,14 @@ namespace nsl {
 		
 		}
 
-		void Connection::open(void)
+		void Connection::open(const char* port)
 		{
 			if (state != CLOSED) {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to open new connection on already connected server.");
 			}
 
 			// try start accepting connections
-			socket.open(serverPort);
+			socket.open(port);
 
 			state = OPENED;
 		}
@@ -69,7 +69,7 @@ namespace nsl {
 
 			timeoutIteratorValid = false;
 
-			sockaddr_in sender;
+			Address sender;
 			unsigned int size;
 			while (size = socket.receive(sender,buffer,MAX_PACKET_SIZE)) {
 				
@@ -269,7 +269,7 @@ namespace nsl {
 #endif
 		}
 
-		void Connection::sendHandshake(sockaddr_in address, unsigned int connectionId)
+		void Connection::sendHandshake(Address& address, unsigned int connectionId)
 		{
 			BitStreamWriter* stream = new BitStreamWriter(6);
 			stream->write<uint16>(applicationId);
@@ -277,7 +277,7 @@ namespace nsl {
 			socket.send(address, stream->buffer, 6);
 		}
 
-		void Connection::sendDisconnect(sockaddr_in address, unsigned int connectionId)
+		void Connection::sendDisconnect(Address& address, unsigned int connectionId)
 		{
 			BitStreamWriter* stream = new BitStreamWriter(7);
 			stream->write<uint16>(applicationId);

@@ -15,8 +15,8 @@
 class Server : public nsl::Server
 {
 public:
-	Server(unsigned int applicationId, unsigned short port) 
-		: nsl::Server(applicationId, port) {
+	Server(unsigned int applicationId) 
+		: nsl::Server(applicationId) {
 	}
 
 	bool onClientConnect(nsl::Peer* peer) {
@@ -54,16 +54,17 @@ int main(int argc, char * argv[])
 	o1.defineAttribute<nsl::uint32>(MY_UINT7);
 
 	// create and launch server
-	Server server(123, 12345);
+	Server server(123);
 	server.registerObjectClass(&o1);
-	server.open();
+	server.open("12345");
 
 	// initial update
 	server.updateNetwork();
 
 	// create object
 	unsigned int value = 0;
-	nsl::ServerObject* o = server.createObject(MY_TEST_OBJECT);
+	nsl::BitStreamWriter* creationMessage;
+	nsl::ServerObject* o = server.createObject(MY_TEST_OBJECT, creationMessage);
 	o->set<nsl::uint32>(MY_UINT, value);
 	o->set<nsl::uint32>(MY_UINT2, value);
 	o->set<nsl::uint32>(MY_UINT3, value);
@@ -71,6 +72,7 @@ int main(int argc, char * argv[])
 	o->set<nsl::uint32>(MY_UINT5, value);
 	o->set<nsl::uint32>(MY_UINT6, value);
 	o->set<nsl::uint32>(MY_UINT7, value);
+	*creationMessage << "novej objekt!";
 
 	nsl::ServerObject* o2 = server.createObject(MY_TEST_OBJECT);
 	o->set<nsl::uint32>(MY_UINT, value);

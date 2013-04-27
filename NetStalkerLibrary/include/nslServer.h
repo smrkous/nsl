@@ -27,7 +27,7 @@ namespace nsl {
 	class Peer
 	{
 	public:
-		void* customPointer;
+		void* customData;
 
 		NSL_IMPORT_EXPORT
 		unsigned int getId(void);
@@ -67,6 +67,9 @@ namespace nsl {
 		NSL_IMPORT_EXPORT
 		void destroy(void);
 
+		/// Pointer to custom data
+		void* customData;
+
 	private:
 		friend class server::NetworkObject;
 		friend class server::ServerImpl;
@@ -86,14 +89,14 @@ namespace nsl {
 	public:
 
 		NSL_IMPORT_EXPORT
-		Server(unsigned int applicationId, unsigned short port);
+		Server(unsigned int applicationId);
 
 		NSL_IMPORT_EXPORT
 		~Server(void);
 
 		/// Open connection and start listening.
 		NSL_IMPORT_EXPORT
-		void open(void);
+		void open(const char* port = NULL);
 
 		/// Close all opened connections and all network activity.
 		NSL_IMPORT_EXPORT
@@ -107,6 +110,10 @@ namespace nsl {
 		/// Create new networked object of given type
 		NSL_IMPORT_EXPORT
 		ServerObject* createObject(unsigned short classId);
+
+		/// Create new networked object of given type with additional creation metadata - provide empty BitStreamWriter pointer.
+		NSL_IMPORT_EXPORT
+		ServerObject* createObject(unsigned short classId, BitStreamWriter*& creationMetaData);
 
 		/// Data written into provided stream will be sent to chosen peer after flushNetwork() is called.
 		/// Max size of the message is NSL_MAX_CUSTOM_MESSAGE_SIZE
@@ -149,8 +156,10 @@ namespace nsl {
 		void flushNetwork(void);
 
 		/// Process updates from clients
+		/// Library manages time on its own, hovewer, it is possible to specify the time by application (only positive numbers are accepted).
+		/// Library works with seconds (in double format), if you pass time manually in server and client both, you can choose another precission.
 		NSL_IMPORT_EXPORT
-		void updateNetwork(void);
+		void updateNetwork(double time = 0);
 
 	private:
 		server::ServerImpl* i;

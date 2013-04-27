@@ -6,9 +6,9 @@
 #include "ClientImpl.h"
 
 namespace nsl {
-	Client::Client(unsigned short applicationId, unsigned short clientPort)
+	Client::Client(unsigned short applicationId)
 	{
-		i = new client::ClientImpl(this, applicationId, clientPort);
+		i = new client::ClientImpl(this, applicationId);
 	}
 
 	Client::~Client(void)
@@ -21,9 +21,9 @@ namespace nsl {
 		i->registerObjectClass(new ObjectClassDefinition(objectClass));
 	}
 
-	void Client::open(unsigned short port, const char* address)
+	void Client::open(const char* address, const char* port, const char* clientPort)
 	{
-		i->open(port, address);
+		i->open(address, port, clientPort);
 	}
 
 	void Client::close()
@@ -31,9 +31,9 @@ namespace nsl {
 		i->close();
 	}
 
-	ClientState Client::updateNetwork(void)
+	ClientState Client::updateNetwork(double time)
 	{
-		return i->updateNetwork();
+		return i->updateNetwork(time);
 	}
 
 	BitStreamWriter* Client::createCustomMessage(bool reliable)

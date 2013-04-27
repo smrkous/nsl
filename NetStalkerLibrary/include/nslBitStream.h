@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <string>
 #include "nsl.h"
 #include "nslReflexion.h"
 
@@ -20,6 +21,9 @@ namespace nsl {
 
 		/// Forward declaration of inner library class
 		class Connection;
+
+		/// Forward declaration of inner library class
+		class ServerImpl;
 	};
 
 	/// Transfers raw byte data into defined types and current endianity.
@@ -75,7 +79,7 @@ namespace nsl {
 
 		/// Read defined attribute from the stream. If the stream contains no more data, exception is thrown.
 		template<class T>
-		typename T::Type read(void) throw (Exception) {typename T::Type value; read(T::getByteSize(), (byte *)(&value)); return value;};
+		typename T::Type read(void) {typename T::Type value; read(T::getByteSize(), (byte *)(&value)); return value;};
 
 		/// Read raw data from the stream. If the stream contains no more data, exception is thrown.
 		NSL_IMPORT_EXPORT
@@ -94,6 +98,23 @@ namespace nsl {
 		NSL_IMPORT_EXPORT
 		void resetStream(unsigned int newStreamSize = 0);
 	};
+	
+	template <class T>
+	inline nsl::BitStreamReader & operator>>(nsl::BitStreamReader& r, T& v) {
+		v = r.read<nsl::Attribute<T> >();
+		return r;
+	}
+	
+	template <>
+	inline nsl::BitStreamReader & operator>>(nsl::BitStreamReader& r, std::string & str) {
+		char c = r.read<nsl::int8>();
+		while(c != 0) {
+			str.append(1,c);
+			c = r.read<nsl::int8>();
+		}
+		return r;
+	}
+	
 
 	#define BIT_STREAM_INIT_SIZE 30
 	/// Transfers defined types into raw byte data and unified endianity.
@@ -103,6 +124,7 @@ namespace nsl {
 	private:
 		friend class client::Connection;
 		friend class server::Connection;
+		friend class server::ServerImpl;
 
 		byte* buffer;
 		unsigned int bufferLength;
@@ -113,6 +135,10 @@ namespace nsl {
 		bool isSpaceFor(unsigned int bitCount);
 		void expand(unsigned int bitCount);
 		void ensureSpace(unsigned int bitCount);
+
+		/// Append raw data. No endianity check or transformation will be provided.
+		NSL_IMPORT_EXPORT
+		void writeRaw(unsigned int byteSize, byte* data);
 
 		// TODO: opimization - add clear()
 	public:
@@ -170,20 +196,19 @@ namespace nsl {
 		NSL_IMPORT_EXPORT
 		int getRemainingByteSize(void);
 	};
+
+	template <class T>
+	inline nsl::BitStreamWriter & operator<<(nsl::BitStreamWriter &w, const T& v) {
+		w.write<nsl::Attribute<T> >(v);
+		return w;
+	}
+
+	template <>
+	inline nsl::BitStreamWriter & operator<<(nsl::BitStreamWriter &w, const std::string & str) {
+		for(int i = 0; i < str.length(); ++i) {
+			w.write<nsl::int8>(str[i]);
+		}
+		w.write<nsl::int8>(0);
+		return w;
+	}
 };
-
-#include <string>
-
-template <class T>
-inline nsl::BitStreamWriter & operator<<(nsl::BitStreamWriter & w, const T& v) {
-	w.write<nsl::Attribute<T> >(v);
-	return w;
-}
-
-template <>
-inline nsl::BitStreamWriter & operator<<(nsl::BitStreamWriter & w, const std::string & str) {
-	for(int i = 0; i < str.length(); ++i)
-		w.write<nsl::int8>(str[i]);
-	return w;
-}
-

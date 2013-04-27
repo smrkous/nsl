@@ -45,17 +45,17 @@ namespace nsl {
 
 			byte* extractObjectData(ObjectClassDefinition* objectClass, BitStreamReader* stream);
 		public:
-			ClientImpl(Client* userObject, unsigned short applicationId, unsigned short clientPort);
+			ClientImpl(Client* userObject, unsigned short applicationId);
 
 			~ClientImpl(void);
 
 			void registerObjectClass(ObjectClassDefinition* objectClass);
 
-			void open(unsigned short port, const char* address);
+			void open(const char* address, const char* port, const char* clientPort = NULL);
 
 			void close(void);
 
-			ClientState updateNetwork(void);
+			ClientState updateNetwork(double time = 0);
 
 			void flushNetwork(void);
 

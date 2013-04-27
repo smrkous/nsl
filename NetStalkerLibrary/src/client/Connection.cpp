@@ -34,11 +34,10 @@ namespace nsl {
 
 		/* connection */
 
-		Connection::Connection(unsigned short applicationId, unsigned short clientPort) 
+		Connection::Connection(unsigned short applicationId) 
 			: applicationId(applicationId), clientPort(clientPort)
 		{
 			state = CLOSED;
-			connectedAddress.sin_family = AF_INET;
 			connectionId = 0;
 			bufferedMessage = NULL;
 			bufferStream = new BitStreamReader(buffer, MAX_PACKET_SIZE, false);
@@ -49,7 +48,7 @@ namespace nsl {
 			delete bufferStream;
 		}
 
-		void Connection::open(const char* address, unsigned short port, double time)
+		void Connection::open(const char* host, const char* port, const char* clientPort, double time)
 		{
 			if (state != CLOSED) {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to open new connection on already connected or connecting client.");
@@ -66,9 +65,10 @@ namespace nsl {
 			socket.open(clientPort);
 
 			// set address
-			connectedAddress.sin_addr.s_addr = inet_addr( address );
-			connectedAddress.sin_port = htons( port );
-
+			if (!socket.getAddressFromStrings(connectedAddress, host, port)) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: given address cannot be used to create connection");
+			}
+			
 			// send connection request
 			state = CONNECTING;
 			sendConnectionRequest(time);
@@ -106,7 +106,7 @@ namespace nsl {
 		{
 			// if CLOSED or CONNECTED, nothing happens
 			// if CONNECTING or HANDSHAKING, incomming packets are proccessed for update
-			sockaddr_in sender;
+			Address sender;
 			int size;
 
 			switch(state) {
@@ -238,7 +238,7 @@ namespace nsl {
 			}
 
 			// accept relevant packets
-			sockaddr_in sender;
+			Address sender;
 			int size;
 			while (size = socket.receive(sender,buffer,MAX_PACKET_SIZE)) {
 				if (size < 7) {

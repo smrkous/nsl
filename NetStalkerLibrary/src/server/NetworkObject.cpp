@@ -5,7 +5,10 @@
 
 namespace nsl {
 	namespace server {
-		NetworkObject::NetworkObject(ObjectClassDefinition* objectClass, HistoryBuffer* historyBuffer, unsigned int id)
+		NetworkObject::NetworkObject(
+			ObjectClassDefinition* objectClass, 
+			HistoryBuffer* historyBuffer, 
+			unsigned int id)
 			: historyBuffer(historyBuffer), objectClass(objectClass), id(id)
 		{
 			for (unsigned int i = 0; i < NSL_PACKET_BUFFER_SIZE; i++) {
@@ -21,6 +24,7 @@ namespace nsl {
 			serverObject = new ServerObject(this);
 			destroyIndex = NSL_UNDEFINED_BUFFER_INDEX;
 			creationIndex = historyBuffer->getCurrentSeqIndex();
+			creationCustomMessage = NULL;
 		}
 
 		NetworkObject::~NetworkObject(void)
@@ -31,6 +35,10 @@ namespace nsl {
 
 			if (serverObject != NULL) {
 				delete serverObject;
+			}
+
+			if (creationCustomMessage != NULL) {
+				delete creationCustomMessage;
 			}
 		}
 
@@ -88,6 +96,23 @@ namespace nsl {
 		void NetworkObject::setDataBySeqIndex(short seqIndex, byte* data)
 		{
 			this->data[seqIndex] = data;
+		}
+
+		bool NetworkObject::getCreationCustomMessage(byte*& data, unsigned int& size)
+		{
+			if (creationCustomMessage == NULL) {
+				return false;
+			}
+
+			data = creationCustomMessage;
+			size = creationCustomMessageSize;
+			return true;
+		}
+
+		void NetworkObject::setCreationCustomMessage(byte* data, unsigned int size)
+		{
+			creationCustomMessage = data;
+			creationCustomMessageSize = size;
 		}
 
 	};

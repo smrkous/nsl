@@ -9,9 +9,10 @@ using namespace std;
 namespace nsl {
 	namespace client {
 
-		ClientImpl::ClientImpl(Client* userObject, unsigned short applicationId, unsigned short clientPort)
-			: connection(applicationId, clientPort), objectManager(&historyBuffer)
+		ClientImpl::ClientImpl(Client* userObject, unsigned short applicationId)
+			: connection(applicationId), objectManager(&historyBuffer)
 		{
+			lastUpdateTime = 0;
 			this->userObject = userObject;
 			lastConnectionState = CLOSED;
 		}
@@ -27,9 +28,9 @@ namespace nsl {
 			lastConnectionState = CLOSED;
 		}
 
-		void ClientImpl::open(unsigned short port, const char* address)
+		void ClientImpl::open(const char* address, const char* port, const char* clientPort)
 		{
-			connection.open(address, port, getTime());
+			connection.open(address, port, clientPort, getTime());
 		}
 
 		void ClientImpl::registerObjectClass(ObjectClassDefinition* objectClass)
@@ -40,9 +41,13 @@ namespace nsl {
 			objectManager.registerObjectClass(objectClass);
 		}
 
-		ClientState ClientImpl::updateNetwork(void)
+		ClientState ClientImpl::updateNetwork(double time)
 		{
-			double currentTime = getTime();
+			// get current time
+			double currentTime = (time == 0 ? getTime() : time);
+			if (currentTime < lastUpdateTime) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: invalid time passed to updateNetwork");
+			}
 
 			// check connection status and try to connect / handshake, if neccessary
 			lastConnectionState = connection.update(currentTime);
@@ -236,12 +241,7 @@ namespace nsl {
 				objectManager.clearBufferIndex(lastIndexToClear);
 			}
 
-#ifdef NSL_LOG_PACKETS
-					byte x = 99;
-					logBytes(&x, 1);
-#endif
-					seqNumber cmack = stream->read<Attribute<seqNumber> >();
-			customMessageBuffer.updateAck(cmack);
+			customMessageBuffer.updateAck(stream->read<Attribute<seqNumber> >());
 
 			int seqIndex = historyBuffer.seqToIndex(seq);
 			int ackIndex = historyBuffer.seqToIndex(ack);
@@ -255,12 +255,13 @@ namespace nsl {
 				NetworkObject* object = *it;
 
 				byte* ackData = object->getDataBySeqIndex(ackIndex);
-				byte flag = stream->read<uint8>();
+				ObjectFlags flags;
+				*stream >> flags;
 				ObjectClassDefinition* objectClass = object->getObjectClass();
 				byte* newData;
 
-				switch(flag) {
-				case NSL_OBJECT_FLAG_DIFF:
+				switch(flags.action) {
+				case NSL_OBJECT_FLAG_ACTION_DIFF:
 					// standard object delivery, undo diff and store data
 					newData = extractObjectData(objectClass, stream);
 
@@ -272,7 +273,7 @@ namespace nsl {
 					object->setDataBySeqIndex(seqIndex, newData, UPDATED);
 					break;
 
-				case NSL_OBJECT_FLAG_DELETE:
+				case NSL_OBJECT_FLAG_ACTION_DELETE:
 					// object was destroyed
 					newData = extractObjectData(objectClass, stream);
 
@@ -280,21 +281,14 @@ namespace nsl {
 						newData[i] ^= ackData[i];
 					}
 					
-					object->setDataBySeqIndex(seqIndex, newData, DESTROYED);
-					break;
-
-				case NSL_OBJECT_FLAG_OUT_OF_SCOPE:
-					// object was destroyed
-					newData = extractObjectData(objectClass, stream);
-
-					for (unsigned int i = 0; i < objectClass->getByteSize(); i++) {
-						newData[i] ^= ackData[i];
+					if (flags.scopeDestroy == NSL_OBJECT_FLAG_SD_HIDE) {
+						object->setDataBySeqIndex(seqIndex, newData, DESTROYED, false, true);
+					} else {
+						object->setDataBySeqIndex(seqIndex, newData, DESTROYED);
 					}
-					
-					object->setDataBySeqIndex(seqIndex, newData, DESTROYED, false, true);
 					break;
 
-				case NSL_OBJECT_FLAG_SNAPSHOT:
+				case NSL_OBJECT_FLAG_ACTION_SNAPSHOT:
 					// snapshot object delivery, store data
 					newData = extractObjectData(objectClass, stream);
 
@@ -302,7 +296,7 @@ namespace nsl {
 					object->setDataBySeqIndex(seqIndex, newData, UPDATED);
 					break;
 				/*
-				case NSL_OBJECT_FLAG_NO_CHANGE:
+				case NSL_OBJECT_FLAG_ACTION_NO_CHANGE:
 					// no change occured, just copy ack data to the current destination
 					newData = new byte[objectClass->getByteSize()];
 					memcpy(newData, ackData, objectClass->getByteSize());
@@ -319,9 +313,10 @@ namespace nsl {
 			////////////////////// object creation part ////////////////////////
 			
 			while (true) {
-				byte flag = stream->read<uint8>();
+				ObjectFlags flags;
+				*stream >> flags;
 
-				if (flag == NSL_OBJECT_FLAG_END_OF_SECTION) {
+				if (flags.action == NSL_OBJECT_FLAG_ACTION_END_OF_SECTION) {
 					break;
 				}
 
@@ -331,35 +326,37 @@ namespace nsl {
 				// object could have been already created, but server was not noticed yet, so it sent its data as a new object
 				NetworkObject* o = objectManager.findObjectById(objectId);
 
-				switch (flag) {
-				case NSL_OBJECT_FLAG_CREATE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED, true, false);
+				// try to extract meta information for object creation
+				BitStreamReader* creationReader = NULL;
+				if (flags.creationCustomMessage == NSL_OBJECT_FLAG_CM_PRESENT) {
+					unsigned int customMessageSize = stream->read<Attribute<customMessageSizeNumber> >();
+
+					// extract message only if it has not arrived yet, otherwise skip it
+					if (o == NULL || o->getCreationCustomMessage() == NULL) {
+						creationReader = stream->createSubreader(customMessageSize, true);
+					} 
+					stream->skipBits(8*customMessageSize);
+				}
+
+				switch (flags.action) {
+				case NSL_OBJECT_FLAG_ACTION_CREATE:
+					extractObjectFromStream(o, stream, seqIndex, classId, objectId, 
+						CREATED, flags.scopeCreate == NSL_OBJECT_FLAG_SC_BIRTH, false);
 					objectManager.addObjectToPacket(seqIndex, o);
 					break;
 
-				case NSL_OBJECT_FLAG_CREATE_AND_DELETE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, true, true);
-					break;
-
-				case NSL_OBJECT_FLAG_CREATE_AND_OUT_OF_SCOPE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, true, false);
-					break;
-
-				case NSL_OBJECT_FLAG_IN_SCOPE:
-					extractObjectFromStream(o,stream, seqIndex, classId, objectId, CREATED, false, false);
-					objectManager.addObjectToPacket(seqIndex, o);
-					break;
-
-				case NSL_OBJECT_FLAG_IN_SCOPE_AND_DELETE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, false, true);
-					break;
-
-				case NSL_OBJECT_FLAG_IN_SCOPE_AND_OUT_OF_SCOPE:
-					extractObjectFromStream(o, stream, seqIndex, classId, objectId, CREATED_AND_DESTROYED, false, false);
+				case NSL_OBJECT_FLAG_ACTION_CREATE_AND_DELETE:
+					extractObjectFromStream(o, stream, seqIndex, classId, objectId, 
+						CREATED_AND_DESTROYED, flags.scopeCreate == NSL_OBJECT_FLAG_SC_BIRTH, flags.scopeCreate == NSL_OBJECT_FLAG_SD_DEATH);
 					break;
 
 				default:
 					throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: unknown flag during object creation");
+				}
+
+				// if there were any meta creation data, add them to object
+				if (creationReader != NULL) {
+					o->setCreationCustomMessage(creationReader);
 				}
 			}
 

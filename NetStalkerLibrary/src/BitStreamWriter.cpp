@@ -42,7 +42,7 @@ namespace nsl {
 		unsigned int byteSize = stream->currentByte - stream->buffer;
 		ensureSpace(byteSize*8 + stream->bitOffset);
 
-		write(byteSize, stream->buffer);
+		writeRaw(byteSize, stream->buffer);
 		if (stream->bitOffset > 0) {
 			write(1, stream->currentByte);
 			unsigned int bitsToRemove = 8 - stream->bitOffset;
@@ -53,6 +53,37 @@ namespace nsl {
 				bitOffset -= bitsToRemove;
 			}
 		}
+	}
+
+	void BitStreamWriter::writeRaw(unsigned int byteSize, byte* value)
+	{
+		if(!byteSize) {
+			return;
+		}
+		
+		ensureSpace(byteSize*8);
+
+		// if there is no bit offset, bytes can by directly copied
+		if(!bitOffset) 
+		{
+			memcpy(currentByte, value, byteSize);
+			currentByte += byteSize;
+			return;
+		}
+
+		// there is a bit offset, every byte must be merged
+		int bitFreeEnd = 8 - bitOffset;
+		byte sourceByte;
+		byte destByte = *currentByte & (0xFF << bitFreeEnd);	// set zeros (from undefined) to bitFreeEnd bits
+
+		byteSize--;
+		for(; byteSize >= 0; byteSize--) {
+			sourceByte = *(value++);
+			*(currentByte++) = destByte | sourceByte >> bitOffset;
+			destByte = sourceByte << bitFreeEnd;
+		}
+
+		*currentByte = destByte;
 	}
 
 	unsigned int BitStreamWriter::getByteSize(void)

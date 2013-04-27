@@ -7,10 +7,11 @@
 namespace nsl {
 	namespace server {
 
-		ServerImpl::ServerImpl(Server* userObject, unsigned int applicationId, unsigned short port)
-			: userObject(userObject), connection(applicationId, port)
+		ServerImpl::ServerImpl(Server* userObject, unsigned int applicationId)
+			: userObject(userObject), connection(applicationId)
 		{
 			currentScopeAccessible = false;
+			lastUpdateTime = 0;
 		}
 
 		ServerImpl::~ServerImpl(void)
@@ -18,9 +19,9 @@ namespace nsl {
 			close();
 		}
 
-		void ServerImpl::open(void)
+		void ServerImpl::open(const char* port)
 		{
-			connection.open();
+			connection.open(port);
 		}
 
 		void ServerImpl::close(void)
@@ -41,13 +42,26 @@ namespace nsl {
 			return objectManager.createObject(classId, &historyBuffer);
 		}
 
-		void ServerImpl::updateNetwork(void)
+		NetworkObject* ServerImpl::createObject(unsigned int classId, BitStreamWriter*& creationMetaData)
+		{
+			NetworkObject* o = objectManager.createObject(classId, &historyBuffer);
+			byte* data = new byte[NSL_MAX_CUSTOM_MESSAGE_SIZE];
+			creationMetaData = new BitStreamWriter(data, NSL_MAX_CUSTOM_MESSAGE_SIZE);
+			unproccessedCreationCustomMessages.insert(std::pair<unsigned int, BitStreamWriter*>(o->getId(), creationMetaData));
+			return o;
+		}
+
+		void ServerImpl::updateNetwork(double time)
 		{
 			if (!connection.isOpened()) {
 				throw Exception(NSL_EXCEPTION_DISCONNECTED, "NSL: connection closed.");
 			}
 
-			double currentTime = getTime();
+			// get current time
+			double currentTime = (time == 0 ? getTime() : time);
+			if (currentTime < lastUpdateTime) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: invalid time passed to updateNetwork");
+			}
 
 			// proccess all incomming messages
 			PeerConnection* peer;
@@ -130,6 +144,7 @@ namespace nsl {
 
 			historyBuffer.addSeq(currentTime, &objectManager, &connectedPeers);
 
+			lastUpdateTime = currentTime;
 			// TODO: unlock server objects
 		}
 
@@ -148,6 +163,16 @@ namespace nsl {
 
 		void ServerImpl::flushNetwork(void)
 		{
+			// process object creation metadata custom messages
+			for (std::map<unsigned int, BitStreamWriter*>::iterator it = unproccessedCreationCustomMessages.begin();
+				it != unproccessedCreationCustomMessages.end(); it++) {
+					NetworkObject* o = objectManager.findObjectById(it->first);
+					o->setCreationCustomMessage(it->second->buffer, it->second->getByteSize());
+					delete &*(it->second);
+			}
+			unproccessedCreationCustomMessages.clear();
+
+			// send updates for every connected peer
 			std::map<unsigned int, Peer*>::iterator it = connectedPeers.begin();
 			while(it != connectedPeers.end()) {
 
@@ -221,19 +246,22 @@ namespace nsl {
 				for(std::vector<NetworkObject*>::iterator it = ackScope->begin(); it != ackScope->end(); it++) {
 
 					NetworkObject* o = *it;
+					ObjectFlags flags;
 
 					std::set<NetworkObject*>::iterator scopeObject = scope.find(o);
 					if (scopeObject == scope.end()) {
+						flags.action = NSL_OBJECT_FLAG_ACTION_DELETE;
 						if (o->getDestroyIndex() == currentSeqIndex) {
-							stream->writeByte(NSL_OBJECT_FLAG_DELETE);
+							flags.scopeDestroy = NSL_OBJECT_FLAG_SD_DEATH;
 						} else {
-							stream->writeByte(NSL_OBJECT_FLAG_OUT_OF_SCOPE);
+							flags.scopeDestroy = NSL_OBJECT_FLAG_SD_HIDE;
 						}
 					} else {
 						scope.erase(scopeObject);
-						stream->writeByte(NSL_OBJECT_FLAG_DIFF);
+						flags.action = NSL_OBJECT_FLAG_ACTION_DIFF;
 						seqScope->push_back(o);
 					}
+					*stream << flags;
 
 					byte* newData;	
 					unsigned int byteSize = o->getObjectClass()->getByteSize();
@@ -260,19 +288,38 @@ namespace nsl {
 			// add new objects to packet
 			for(std::set<NetworkObject*>::iterator it = scope.begin(); it != scope.end(); it++) {
 				NetworkObject* o = (*it);
+				ObjectFlags flags;
+				flags.action = NSL_OBJECT_FLAG_ACTION_CREATE;
 				seqScope->push_back(o);
 				if (o->getCreationIndex() == currentSeqIndex) {
-					stream->writeByte(NSL_OBJECT_FLAG_CREATE);
+					flags.scopeCreate = NSL_OBJECT_FLAG_SC_BIRTH;
 				} else {
-					stream->writeByte(NSL_OBJECT_FLAG_IN_SCOPE);
+					flags.scopeCreate = NSL_OBJECT_FLAG_SC_SHOW;
 				}
 
+				// add custom message if there is some bound
+				byte* creationCustomMessage = NULL;
+				unsigned int creationCustomMessageSize;
+				if (o->getCreationCustomMessage(creationCustomMessage, creationCustomMessageSize)) {
+					flags.creationCustomMessage = NSL_OBJECT_FLAG_CM_PRESENT;
+				} else {
+					flags.creationCustomMessage = NSL_OBJECT_FLAG_CM_EMPTY;
+				}
+
+				*stream << flags;
 				stream->write<uint16>(o->getObjectClass()->getId());
 				stream->write<uint32>(o->getId());
+
+				if (creationCustomMessage != NULL) {
+					stream->write<Attribute<customMessageSizeNumber> >(creationCustomMessageSize);
+					stream->writeRaw(creationCustomMessageSize, creationCustomMessage);
+				}
+
 				writeObjectData(o->getObjectClass(), stream, o->getDataBySeqIndex(currentSeqIndex));
 			}
-			stream->write<uint8>(NSL_OBJECT_FLAG_END_OF_SECTION);
-
+			ObjectFlags flags;
+			flags.action = NSL_OBJECT_FLAG_ACTION_END_OF_SECTION;
+			*stream << flags;
 
 			// custom messages
 
@@ -302,9 +349,9 @@ namespace nsl {
 						throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: maximal custom message size exceeded");
 					}
 					stream->write<Attribute<customMessageSizeNumber> >(size);
-					stream->write(size, data);
+					stream->writeRaw(size, data);
 
-					// store message if it is realiable
+					// store message if it is reliable
 					if (it->second) {
 						peer->getBufferedCustomMessages(currentSeqIndex).push_back(std::pair<byte*, unsigned int>(data, size));
 					}
@@ -325,7 +372,7 @@ namespace nsl {
 				stream->write<Attribute<seqNumber> >(historyBuffer.indexToSeq(bufferIndex));
 				for(std::vector<std::pair<byte*, unsigned int> >::iterator it = messages.begin(); it != messages.end(); it++) {
 					stream->write<Attribute<customMessageSizeNumber> >(it->second);
-					stream->write(it->second, it->first);
+					stream->writeRaw(it->second, it->first);
 				}
 				stream->write<Attribute<customMessageSizeNumber> >(0);
 			}

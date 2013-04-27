@@ -17,12 +17,16 @@ std::map<unsigned int, nsl::ClientObject*> objects;
 class Client : public nsl::Client
 {
 public:
-	Client(unsigned short applicationId, unsigned short clientPort)
-		: nsl::Client(applicationId, clientPort) {
+	Client(unsigned short applicationId)
+		: nsl::Client(applicationId) {
 	}
 
-	void onCreate(nsl::ClientObject* object, bool objectBirth) {
-		std::cout << "New object created, id: " << object->getId() << ", classId: " << object->getObjectClassId() << "\n";
+	void onCreate(nsl::ClientObject* object, bool objectBirth, nsl::BitStreamReader* creationMetaData) {
+		std::cout << "New object created, id: " << object->getId() << ", classId: " << object->getObjectClassId();
+		if (creationMetaData != NULL) {
+			std::cout << ", customCreationMessageSize: " << creationMetaData->getRemainingByteSize();
+		}
+		std::cout << "\n";
 		objects.insert(std::pair<unsigned int, nsl::ClientObject*>(object->getId(), object));
 	}
 
@@ -65,9 +69,9 @@ int main(int argc, char * argv[])
 
   	// create and launch server
 
-	Client client(123, 58765);
+	Client client(123);
 	client.registerObjectClass(&o1);
-	client.open(12345, "127.0.0.1");
+	client.open("127.0.0.1", "12345", "23456");
 
 	unsigned int value = 0;
 

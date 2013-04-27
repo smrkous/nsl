@@ -17,6 +17,7 @@ namespace nsl {
 
 			clientObject = new ClientObject(this);
 			clientObject->locked = true;
+			creationCustomMessage = NULL;
 		}
 
 		NetworkObject::~NetworkObject(void) 
@@ -28,6 +29,23 @@ namespace nsl {
 			if (clientObject != NULL) {
 				delete clientObject;
 			}
+
+			if (creationCustomMessage != NULL) {
+				delete creationCustomMessage;
+			}
+		}
+
+		void NetworkObject::setCreationCustomMessage(BitStreamReader* reader)
+		{
+			if (creationCustomMessage != NULL) {
+				delete creationCustomMessage;
+			} 
+			creationCustomMessage = reader;
+		}
+
+		BitStreamReader* NetworkObject::getCreationCustomMessage(void)
+		{
+			return creationCustomMessage;
 		}
 
 		ObjectClassDefinition* NetworkObject::getObjectClass(void)

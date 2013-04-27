@@ -10,12 +10,20 @@
 namespace nsl {
 	void logBytes(byte* data, unsigned int size) {
 		myfile.open (NSL_PACKET_LOG_FILENAME, std::ios::app);
+		myfile << '[' << size << "] ";
 		for (unsigned int i = 0; i < size; i++) {
 			myfile << (int)data[i] << ' ';
 		}
 		myfile << "\n";
 		myfile.close();
 	}	
+
+	void logString(const char* data)
+	{
+		myfile.open (NSL_PACKET_LOG_FILENAME, std::ios::app);
+		myfile << data;
+		myfile.close();
+	}
 };
 #endif
 

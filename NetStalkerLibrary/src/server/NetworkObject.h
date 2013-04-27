@@ -25,8 +25,13 @@ namespace nsl {
 			int creationIndex;
 			unsigned int id;
 			ServerObject* serverObject;
+			byte* creationCustomMessage;
+			unsigned int creationCustomMessageSize;
 		public:
-			NetworkObject(ObjectClassDefinition* objectClass, HistoryBuffer* historyBuffer, unsigned int id);
+			NetworkObject(
+				ObjectClassDefinition* objectClass, 
+				HistoryBuffer* historyBuffer, 
+				unsigned int id);
 			~NetworkObject(void);
 			unsigned int getId(void);
 			ServerObject* getUserObject(void);
@@ -38,6 +43,8 @@ namespace nsl {
 			void set(unsigned int attrId, unsigned int byteSize, byte* value);
 			byte* getDataBySeqIndex(short seqIndex);
 			void setDataBySeqIndex(short seqIndex, byte* data);
+			void setCreationCustomMessage(byte* data, unsigned int size);
+			bool getCreationCustomMessage(byte*& data, unsigned int& size);
 		};
 	};
 };

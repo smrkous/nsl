@@ -82,5 +82,14 @@ namespace nsl {
 			return o;
 		} 
 
+		NetworkObject* ObjectManager::findObjectById(unsigned int objectId)
+		{
+			std::map<unsigned int, NetworkObject*>::iterator it = objects.find(objectId);
+			if (it == objects.end()) {
+				return NULL;
+			} else {
+				return it->second;
+			}
+		}
 	};
 };

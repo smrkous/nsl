@@ -26,9 +26,9 @@ namespace nsl {
 		struct PeerConnection 
 		{
 			unsigned int connectionId;
-			sockaddr_in connectedAddress;
+			Address connectedAddress;
 			double lastResponse;
-			PeerConnection(unsigned int connectionId, sockaddr_in address)
+			PeerConnection(unsigned int connectionId, Address& address)
 				: connectionId(connectionId), connectedAddress(address) {}
 		};
 
@@ -71,14 +71,14 @@ namespace nsl {
 			bool timeoutIteratorValid;
 
 			void send(Packet* packet);
-			void sendHandshake(sockaddr_in address, unsigned int connectionId);
-			void sendDisconnect(sockaddr_in address, unsigned int connectionId);
+			void sendHandshake(Address& address, unsigned int connectionId);
+			void sendDisconnect(Address& address, unsigned int connectionId);
 		public:
-			Connection(unsigned short applicationId, unsigned short serverPort);
+			Connection(unsigned short applicationId);
 			~Connection(void);
 
 			/// open connection
-			void open(void);
+			void open(const char* port);
 
 			bool isOpened(void);
 

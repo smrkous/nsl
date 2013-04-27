@@ -5,9 +5,9 @@
 
 namespace nsl {
 
-	Server::Server(unsigned int applicationId, unsigned short port)
+	Server::Server(unsigned int applicationId)
 	{
-		i = new server::ServerImpl(this, applicationId, port);
+		i = new server::ServerImpl(this, applicationId);
 	}
 
 	Server::~Server(void)
@@ -15,9 +15,9 @@ namespace nsl {
 		delete i;
 	}
 
-	void Server::open(void)
+	void Server::open(const char* port)
 	{
-		i->open();
+		i->open(port);
 	}
 
 	void Server::close(void)
@@ -35,6 +35,11 @@ namespace nsl {
 		return i->createObject(classId)->getUserObject();
 	}
 
+	ServerObject* Server::createObject(unsigned short classId, BitStreamWriter*& creationMetaData)
+	{
+		return i->createObject(classId, creationMetaData)->getUserObject();
+	}
+
 	BitStreamWriter* Server::createCustomMessage(nsl::Peer* peer, bool reliable)
 	{
 		return i->createCustomMessage(peer, reliable);
@@ -45,9 +50,9 @@ namespace nsl {
 		i->flushNetwork();
 	}
 
-	void Server::updateNetwork(void)
+	void Server::updateNetwork(double time)
 	{
-		i->updateNetwork();
+		i->updateNetwork(time);
 	}
 
 

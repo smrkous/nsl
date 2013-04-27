@@ -49,7 +49,7 @@ namespace nsl {
 			unsigned short clientPort;
 			ConnectionState state;
 			Socket socket;
-			sockaddr_in connectedAddress;
+			Address connectedAddress;
 			double lastRequest;
 			byte buffer[MAX_PACKET_SIZE];
 			BitStreamReader* bufferStream;	// stream over buffer to make reading of it easier
@@ -60,9 +60,10 @@ namespace nsl {
 			void sendHandshake(double time);
 			void sendDisconnect(void);
 		public:
-			Connection(unsigned short applicationId, unsigned short clientPort);
+			Connection(unsigned short applicationId);
 			~Connection(void);
-			void open(const char* address, unsigned short port, double time);
+			/// clientPort can be null, then it will be chosen automatically
+			void open(const char* address, const char* port, const char* clientPort, double time);
 			ConnectionState update(double time);
 			void close(void);
 			Packet* createPacket(void);

@@ -37,6 +37,7 @@ namespace nsl {
 			bool death[NSL_PACKET_BUFFER_SIZE];
 
 			ClientObject* clientObject;
+			BitStreamReader* creationCustomMessage;
 
 			byte* interpolationPoints[NSL_INTERPOLATION_MINIMAL_DATA_COUNT * 2 + 1];
 			byte* attributeInPoints[NSL_PACKET_BUFFER_SIZE];		// tmp array for returning concrete attribute, data are shifted by offset
@@ -76,6 +77,9 @@ namespace nsl {
 			bool getBirthBySeqIndex(int seqIndex);
 			bool getDeathBySeqIndex(int seqIndex);
 			void setDataBySeqIndex(int seqIndex, byte* data, ObjectSnapshotMeta state, bool birth = false, bool death = false);
+			/// deletes old creation message and sets new one
+			void setCreationCustomMessage(BitStreamReader* reader);
+			BitStreamReader* getCreationCustomMessage(void);
 
 			/// get object which communicates with the application
 			ClientObject* getClientObject(void);
