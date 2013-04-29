@@ -25,7 +25,7 @@ namespace nsl {
 		i->close();
 	}
 
-	void Server::registerObjectClass(ObjectClass* objectClass)
+	void Server::registerObjectClass(ObjectClass& objectClass)
 	{
 		i->registerObjectClass(new ObjectClassDefinition(objectClass));
 	}

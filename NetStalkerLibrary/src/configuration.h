@@ -102,4 +102,5 @@ namespace nsl {
 	double getTime();
 
 	// TODO: do dokumentace napsat, ze vsechny objekty, ktery knihovna predava, tak taky sama dealokuje
+	// TODO: pridat const kde muze byt
 };

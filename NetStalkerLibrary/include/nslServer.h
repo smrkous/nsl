@@ -105,7 +105,7 @@ namespace nsl {
 		/// Add custom defined object class. 
 		/// Only defined classes can be created and shared with clients.
 		NSL_IMPORT_EXPORT
-		void registerObjectClass(ObjectClass* objectClass);
+		void registerObjectClass(ObjectClass& objectClass);
 
 		/// Create new networked object of given type
 		NSL_IMPORT_EXPORT
