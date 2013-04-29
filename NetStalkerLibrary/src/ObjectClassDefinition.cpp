@@ -1,20 +1,20 @@
 #include "ObjectClassDefinition.h"
 
 namespace nsl {
-	ObjectClassDefinition::ObjectClassDefinition(ObjectClass* userObject)
+	ObjectClassDefinition::ObjectClassDefinition(ObjectClass& userObject)
 	{
 		// at least one attribute is mandatory
-		if (userObject->attributes.size() <= 0) {
+		if (userObject.attributes.size() <= 0) {
 			// TODO: throw new Exception
 		}
 			
-		id = userObject->id;
-		attributeCount = userObject->attributeMaxId + 1;	// if there are any ids skipped, space will be wasted
+		id = userObject.id;
+		attributeCount = userObject.attributeMaxId + 1;	// if there are any ids skipped, space will be wasted
 		attributes = new AttributeDefinition*[attributeCount];
 		offsets = new unsigned int[attributeCount];
 			
 		std::vector<AttributeDefinition>::iterator it;
-		for (it = userObject->attributes.begin(); it != userObject->attributes.end(); ++it ) {
+		for (it = userObject.attributes.begin(); it != userObject.attributes.end(); ++it ) {
 			attributes[it->identifier] = &(*it);
 		}
 

@@ -16,7 +16,7 @@ namespace nsl {
 	public:
 		/// Convert user-defined ObjectClass to ObjectClassDefinition.
 		/// At least one attribute must be set, otherwise an exception is returned.
-		ObjectClassDefinition(ObjectClass* userObject);
+		ObjectClassDefinition(ObjectClass& userObject);
 
 		/// Get info about specific attribut.
 		/// Invalid attrId causes exception being thrown.

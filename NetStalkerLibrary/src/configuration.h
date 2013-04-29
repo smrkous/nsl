@@ -100,4 +100,6 @@ namespace nsl {
 	#endif
 
 	double getTime();
+
+	// TODO: do dokumentace napsat, ze vsechny objekty, ktery knihovna predava, tak taky sama dealokuje
 };

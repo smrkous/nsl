@@ -95,7 +95,7 @@ namespace nsl {
 		/// Add custom defined object class. 
 		/// Only defined classes can be received from server, otherwise exception is thrown.
 		NSL_IMPORT_EXPORT
-		void registerObjectClass(ObjectClass* objectClass);
+		void registerObjectClass(ObjectClass& objectClass);
 
 		/// Open the connection.
 		/// This operation is non-blocking, so the connection won't open immediately.
