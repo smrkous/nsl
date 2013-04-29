@@ -16,7 +16,7 @@ namespace nsl {
 		delete i;
 	}
 
-	void Client::registerObjectClass(ObjectClass* objectClass)
+	void Client::registerObjectClass(ObjectClass& objectClass)
 	{
 		i->registerObjectClass(new ObjectClassDefinition(objectClass));
 	}
