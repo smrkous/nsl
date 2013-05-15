@@ -6,7 +6,7 @@
 #pragma once
 
 #include "nsl.h"
-#include "nslReflexion.h"
+#include "nslReflection.h"
 #include "nslBitStream.h"
 
 namespace nsl {

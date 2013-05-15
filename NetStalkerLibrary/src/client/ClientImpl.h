@@ -11,6 +11,7 @@ namespace nsl {
 #include "HistoryBuffer.h"
 #include "ObjectManager.h"
 #include "CustomMessageBuffer.h"
+#include "ProtocolParser.h"
 #include "Connection.h"
 #include "../../include/nslClient.h"
 #include <deque>
@@ -25,7 +26,6 @@ namespace nsl {
 			HistoryBuffer historyBuffer;
 			ObjectManager objectManager;
 			Client* userObject;
-			byte buffer[MAX_PACKET_SIZE];	// buffer for reading incomming packets
 
 			double timeOverlap;	// difference between optimal application time and current client time
 			double lastUpdateTime;
@@ -33,17 +33,8 @@ namespace nsl {
 			CustomMessageBuffer customMessageBuffer;
 			std::vector<std::pair<BitStreamWriter*, bool> > newCustomMessages;	// message stream and reliability are stored
 
-			/// Append all custom messages from given index
-			void pushBufferedMessagesByIndex(BitStreamWriter* stream, int bufferIndex);
+			ProtocolParser protocolParser;
 
-			void proccessUpdatePacket(BitStreamReader* stream);
-
-			/// proccess data of new object from stream
-			/// if o == NULL, new object will be created and returned via reference
-			/// otherwise data from stream will be used to update the given object
-			void extractObjectFromStream(NetworkObject*& o, BitStreamReader* stream, int seqIndex, unsigned short classId, unsigned int objectId, ObjectSnapshotMeta snapshotMeta, bool birth, bool death);
-
-			byte* extractObjectData(ObjectClassDefinition* objectClass, BitStreamReader* stream);
 		public:
 			ClientImpl(Client* userObject, unsigned short applicationId);
 

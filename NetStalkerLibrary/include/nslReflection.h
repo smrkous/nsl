@@ -1,5 +1,5 @@
 /* 
-	nslReflexion.h
+	nslReflection.h
 	Contains classes and constructs required for object class and attribute definition.
 */
 

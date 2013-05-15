@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
   	// create and launch server
 
 	Client client(123);
-	client.registerObjectClass(&o1);
+	client.registerObjectClass(o1);
 	client.open("127.0.0.1", "12345", "23456");
 
 	unsigned int value = 0;
@@ -99,7 +99,10 @@ int main(int argc, char * argv[])
 			}
 			std::cout << "\n";
 			nsl::BitStreamWriter * cmw = client.createCustomMessage(true);
-			*cmw << value << 3.2f << "pejsek";
+			//*cmw << value << 3.2f << "pejsek";
+			for(int i = 0; i < value; i++) {
+				*cmw << 'a';
+			}
 			client.flushNetwork();
 			Sleep(400);
 		}

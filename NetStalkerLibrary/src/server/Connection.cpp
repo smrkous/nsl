@@ -7,9 +7,9 @@ namespace nsl {
 		/* Packet */
 
 		Packet::Packet(Connection* connection, BitStreamWriter* stream, PeerConnection* peer) 
-				: connection(connection), stream(stream), peer(peer) 
+				: connection(connection), stream(stream), peer(peer)
 		{
-		
+			
 		}
 
 		Packet::~Packet(void) 
@@ -41,7 +41,6 @@ namespace nsl {
 
 		Connection::~Connection(void)
 		{
-		
 		}
 
 		void Connection::open(const char* port)
@@ -71,8 +70,8 @@ namespace nsl {
 
 			Address sender;
 			unsigned int size;
-			while (size = socket.receive(sender,buffer,MAX_PACKET_SIZE)) {
-				
+			while (size = socket.receive(sender,buffer,NSL_MAX_UDP_PACKET_SIZE)) {
+
 				// check first 6 bytes for application and connection id
 				if (size < 6) {
 					continue;
@@ -240,33 +239,45 @@ namespace nsl {
 
 #ifdef NSL_COMPRESS
 			unsigned int streamByteSize = packet->stream->getByteSize();
-			byte* data = new byte[streamByteSize];
-			unsigned int bytesAfterCompression = LZ4_compress_limitedOutput((const char*)packet->stream->buffer + 7, (char*)data + 7, streamByteSize - 7, streamByteSize - 7);
-			if (bytesAfterCompression == 0) {
+			
+			unsigned int bytesAfterCompression = compress(packet->stream->buffer + 7, compressBuffer + 7, streamByteSize - 7, NSL_MAX_UDP_PACKET_SIZE-7);
+			
+			/*if (bytesAfterCompression == 0 || bytesAfterCompression > streamByteSize - 7) {
 				// compression failed to make socket smaller, send it raw
-				socket.send(
+				send(
 					packet->peer->connectedAddress, 
 					packet->stream->buffer, 
 					streamByteSize
 				);
-			} else {
+			} else {*/
 				// send compressed update
-				memcpy(data, packet->stream->buffer, 6);
-				data[6] = NSL_CONNECTION_FLAG_COMPRESSED_UPDATE;
-				socket.send(
+				memcpy(compressBuffer, packet->stream->buffer, 6);
+				compressBuffer[6] = NSL_CONNECTION_FLAG_COMPRESSED_UPDATE;
+				send(
 					packet->peer->connectedAddress, 
-					data, 
+					compressBuffer, 
 					bytesAfterCompression + 7
 				);
-			}
-			
+			/*}*/
 #else
-			socket.send(
+			send(
 				packet->peer->connectedAddress, 
 				packet->stream->buffer, 
 				packet->stream->currentByte - packet->stream->buffer
 			);
 #endif
+		}
+
+		void Connection::send(Address& address, byte* data, unsigned int dataSize)
+		{
+			if (dataSize > NSL_MAX_UDP_PACKET_SIZE) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to send too much data, maximum UDP packet limits reached");
+			}
+			socket.send(
+				address, 
+				data, 
+				dataSize
+			);
 		}
 
 		void Connection::sendHandshake(Address& address, unsigned int connectionId)

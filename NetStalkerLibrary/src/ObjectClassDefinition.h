@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/nslReflexion.h"
+#include "../include/nslReflection.h"
 
 namespace nsl {
 

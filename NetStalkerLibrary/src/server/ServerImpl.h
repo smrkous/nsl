@@ -16,6 +16,7 @@ namespace nsl {
 #include "Connection.h"
 #include "ObjectManager.h"
 #include "HistoryBuffer.h"
+#include "ProtocolParser.h"
 #include <map>
 #include <set>
 
@@ -28,6 +29,7 @@ namespace nsl {
 			Connection connection;
 			ObjectManager objectManager;
 			HistoryBuffer historyBuffer;
+			ProtocolParser protocolParser;
 			Server* userObject;
 			bool opened;
 			double lastUpdateTime;
@@ -35,11 +37,6 @@ namespace nsl {
 			std::map<unsigned int, BitStreamWriter*> unproccessedCreationCustomMessages;
 			std::set<NetworkObject*> currentScope;
 			bool currentScopeAccessible;
-
-			/// Append all custom messages from given index
-			void pushBufferedMessagesByIndex(BitStreamWriter* stream, int bufferIndex, Peer* peer);
-			void sendUpdateToPeer(Peer* peer, std::set<NetworkObject*>& scope, int ackIndex);
-			void writeObjectData(ObjectClassDefinition* objectClass, BitStreamWriter* stream, byte* data);
 		public:
 			ServerImpl(Server* userObject, unsigned int applicationId);
 			~ServerImpl(void);

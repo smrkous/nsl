@@ -16,8 +16,11 @@
     <Filter Include="test">
       <UniqueIdentifier>{67ca03f2-ad94-4cd2-a466-4f05122abd03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\lz4">
+    <Filter Include="src\compression">
       <UniqueIdentifier>{c179ea8d-826e-4ae7-b5e6-7d84b74cafc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compression\zlib">
+      <UniqueIdentifier>{bc7bf2cb-1a98-493a-9194-f3834a7c1233}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,11 +88,68 @@
     <ClCompile Include="src\Socket.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lz4\lz4.c">
-      <Filter>src\lz4</Filter>
-    </ClCompile>
     <ClCompile Include="src\server\UserPeer.cpp">
       <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\server\ProtocolParser.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\rle.c">
+      <Filter>src\compression</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\lz4.c">
+      <Filter>src\compression</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client\ProtocolParser.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\compression.cpp">
+      <Filter>src\compression</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\deflate.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\inftrees.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\gzwrite.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\gzlib.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\gzread.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\inffast.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\compress.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\infback.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\inflate.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\trees.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\uncompr.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\zutil.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\crc32.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\adler32.c">
+      <Filter>src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compression\zlib\gzclose.c">
+      <Filter>src\compression\zlib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,9 +160,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\nslClient.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\nslReflexion.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\nslServer.h">
@@ -153,8 +210,62 @@
     <ClInclude Include="src\Socket.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lz4\lz4.h">
-      <Filter>src\lz4</Filter>
+    <ClInclude Include="src\server\ProtocolParser.h">
+      <Filter>src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\rle.h">
+      <Filter>src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\lz4.h">
+      <Filter>src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nslReflection.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\lz4_encoder.h">
+      <Filter>src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\lz4_decoder.h">
+      <Filter>src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="src\client\ProtocolParser.h">
+      <Filter>src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\compression.h">
+      <Filter>src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\zlib.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\zconf.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\gzguts.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\zutil.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\deflate.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\crc32.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\inffixed.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\inffast.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\inftrees.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\trees.h">
+      <Filter>src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compression\zlib\inflate.h">
+      <Filter>src\compression\zlib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

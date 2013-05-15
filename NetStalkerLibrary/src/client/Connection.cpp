@@ -40,12 +40,21 @@ namespace nsl {
 			state = CLOSED;
 			connectionId = 0;
 			bufferedMessage = NULL;
-			bufferStream = new BitStreamReader(buffer, MAX_PACKET_SIZE, false);
+			// create bitStream with statically allocated buffer, so do not bind it
+			bufferStream = new BitStreamReader(buffer, NSL_MAX_UDP_PACKET_SIZE, false);
+
+#ifdef NSL_COMPRESS
+			decompressionBuffer = new byte[NSL_INITIAL_MAX_PACKET_SIZE];
+			decompressionBufferSize = NSL_INITIAL_MAX_PACKET_SIZE;
+#endif
 		}
 
 		Connection::~Connection(void)
 		{
 			delete bufferStream;
+#ifdef NSL_COMPRESS
+			delete decompressionBuffer;
+#endif
 		}
 
 		void Connection::open(const char* host, const char* port, const char* clientPort, double time)
@@ -112,7 +121,7 @@ namespace nsl {
 			switch(state) {
 			case CONNECTING:
 				// accept only connectionResponse (and get its connectionId)
-				while (size = socket.receive(sender,buffer,MAX_PACKET_SIZE)) {
+				while (size = socket.receive(sender,buffer, NSL_MAX_UDP_PACKET_SIZE)) {
 					if (size != 6) {
 						continue;
 					}
@@ -134,7 +143,7 @@ namespace nsl {
 				break;
 			case HANDSHAKING:
 				// accept only handshakeResponse (and get its status)
-				while (size = socket.receive(sender,buffer,MAX_PACKET_SIZE)) {
+				while (size = socket.receive(sender,buffer,NSL_MAX_UDP_PACKET_SIZE)) {
 					if (size < 7) {
 						continue;
 					}
@@ -160,7 +169,7 @@ namespace nsl {
 					case NSL_CONNECTION_FLAG_COMPRESSED_UPDATE:
 						state = CONNECTED;
 #ifdef NSL_COMPRESS
-						bufferedMessage = decompress(bufferStream);
+						bufferedMessage = decompressStream(bufferStream);
 #else
 						throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: Compressed update was received from server, but compression is turned of on client");
 #endif
@@ -176,7 +185,7 @@ namespace nsl {
 				break;
 			case CLOSED:
 				// throw away all incomming packets so they will not mess later
-				while (size = socket.receive(sender,buffer,MAX_PACKET_SIZE)) {}
+				while (size = socket.receive(sender,buffer,NSL_MAX_UDP_PACKET_SIZE)) {}
 			default:
 				break;
 			}
@@ -214,6 +223,10 @@ namespace nsl {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to send packet when not connected.");
 			}
 
+			if (packet->stream->currentByte - packet->stream->buffer > NSL_MAX_UDP_PACKET_SIZE) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to send too much data, maximum UDP packet limits reached");
+			}
+
 			socket.send(
 				connectedAddress, 
 				packet->stream->buffer, 
@@ -240,7 +253,7 @@ namespace nsl {
 			// accept relevant packets
 			Address sender;
 			int size;
-			while (size = socket.receive(sender,buffer,MAX_PACKET_SIZE)) {
+			while (size = socket.receive(sender,buffer,NSL_MAX_UDP_PACKET_SIZE)) {
 				if (size < 7) {
 					continue;
 				}
@@ -258,10 +271,10 @@ namespace nsl {
 					state = CLOSED;
 					return NULL;
 				case NSL_CONNECTION_FLAG_UPDATE:
-					return bufferStream->createSubreader(size - 7, true);
+					return bufferStream;//->createSubreader(size - 7, true);
 				case NSL_CONNECTION_FLAG_COMPRESSED_UPDATE:
 #ifdef NSL_COMPRESS
-					return decompress(bufferStream);
+					return decompressStream(bufferStream);
 #else
 					throw Exception(NSL_EXCEPTION_LIBRARY_ERROR, "NSL: Compressed update was received from server, but compression is turned of on client");
 #endif
@@ -274,13 +287,23 @@ namespace nsl {
 		}
 
 #ifdef NSL_COMPRESS
-		BitStreamReader* Connection::decompress(BitStreamReader* input)
+		BitStreamReader* Connection::decompressStream(BitStreamReader* input)
 		{
 			unsigned int streamByteSize = input->getRemainingByteSize();
-			// TODO: optimize - create one common buffer of MAX_PACKET_SIZE and then memcpy into new, smaller buffer
-			byte* data = new byte[MAX_PACKET_SIZE - 7];
-			unsigned int decompressedByteSize = LZ4_uncompress((const char *)input->currentByte, (char *)data, MAX_PACKET_SIZE - 7);
-			return new BitStreamReader(data, decompressedByteSize, false);		
+
+			if (streamByteSize == 0) {
+				return input;
+			}
+
+			unsigned int decompressedByteSize = decompress(input->currentByte, decompressionBuffer, streamByteSize, decompressionBufferSize);
+			while (decompressedByteSize == 0) {
+				delete decompressionBuffer;
+				decompressionBufferSize *= 2;
+				decompressionBuffer = new byte[decompressionBufferSize];
+				decompressedByteSize = decompress(input->currentByte, decompressionBuffer, streamByteSize, decompressionBufferSize);
+			}
+			
+			return new BitStreamReader(decompressionBuffer, decompressedByteSize, false);		
 		}
 #endif
 

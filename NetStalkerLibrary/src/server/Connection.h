@@ -8,7 +8,7 @@ namespace nsl {
 #include "../configuration.h"
 #include "../Socket.h"
 #ifdef NSL_COMPRESS
-#include "../lz4/lz4.h"
+#include "../compression/compression.h"
 #endif
 #include <map>
 
@@ -61,7 +61,10 @@ namespace nsl {
 			unsigned short applicationId;
 			unsigned short serverPort;
 			Socket socket;
-			byte buffer[MAX_PACKET_SIZE];
+			byte buffer[NSL_MAX_UDP_PACKET_SIZE];
+#ifdef NSL_COMPRESS
+			byte compressBuffer[NSL_MAX_UDP_PACKET_SIZE];
+#endif
 			ConnectionState state;
 			std::map<unsigned int,PeerConnection*> connectedPeers;
 			std::map<unsigned int,PeerConnection*> handshakingPeers;
@@ -71,6 +74,8 @@ namespace nsl {
 			bool timeoutIteratorValid;
 
 			void send(Packet* packet);
+			/// Send custom data and check data max size
+			void send(Address& address, byte* data, unsigned int dataSize);
 			void sendHandshake(Address& address, unsigned int connectionId);
 			void sendDisconnect(Address& address, unsigned int connectionId);
 		public:

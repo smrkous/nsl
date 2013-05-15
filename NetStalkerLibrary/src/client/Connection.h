@@ -8,7 +8,7 @@ namespace nsl {
 #include "../configuration.h"
 #include "../Socket.h"
 #ifdef NSL_COMPRESS
-#include "../lz4/lz4.h"
+#include "../compression/compression.h"
 #endif
 
 namespace nsl {
@@ -51,7 +51,11 @@ namespace nsl {
 			Socket socket;
 			Address connectedAddress;
 			double lastRequest;
-			byte buffer[MAX_PACKET_SIZE];
+			byte buffer[NSL_MAX_UDP_PACKET_SIZE];
+#ifdef NSL_COMPRESS
+			byte* decompressionBuffer;
+			unsigned int decompressionBufferSize;
+#endif
 			BitStreamReader* bufferStream;	// stream over buffer to make reading of it easier
 			BitStreamReader* bufferedMessage;
 
@@ -71,7 +75,7 @@ namespace nsl {
 #ifdef NSL_COMPRESS
 			// all remaining data in stream will be decompressed
 			// new reader with new buffer will be created (containing just decompressed data)
-			BitStreamReader* decompress(BitStreamReader* stream);
+			BitStreamReader* decompressStream(BitStreamReader* stream);
 #endif
 		};
 	};

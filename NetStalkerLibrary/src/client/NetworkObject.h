@@ -11,7 +11,7 @@ namespace nsl {
 };
 
 #include "../configuration.h"
-#include "../../include/nslReflexion.h"
+#include "../../include/nslReflection.h"
 
 namespace nsl {
 	namespace client {

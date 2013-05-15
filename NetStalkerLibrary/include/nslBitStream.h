@@ -7,7 +7,7 @@
 
 #include <string>
 #include "nsl.h"
-#include "nslReflexion.h"
+#include "nslReflection.h"
 
 namespace nsl {
 	
@@ -136,10 +136,6 @@ namespace nsl {
 		void expand(unsigned int bitCount);
 		void ensureSpace(unsigned int bitCount);
 
-		/// Append raw data. No endianity check or transformation will be provided.
-		NSL_IMPORT_EXPORT
-		void writeRaw(unsigned int byteSize, byte* data);
-
 		// TODO: opimization - add clear()
 	public:
 
@@ -195,6 +191,10 @@ namespace nsl {
 		/// Get number of whole bytes remaining in this stream (until overflow)
 		NSL_IMPORT_EXPORT
 		int getRemainingByteSize(void);
+
+		/// Append raw data. No endianity check or transformation will be provided.
+		NSL_IMPORT_EXPORT
+		void writeRaw(unsigned int byteSize, byte* data);
 	};
 
 	template <class T>

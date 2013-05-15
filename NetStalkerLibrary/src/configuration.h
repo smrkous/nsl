@@ -31,13 +31,14 @@ namespace nsl {
 
 	/* common configuration */
 
-	//#define NSL_COMPRESS	// should be sockets compressed?
+	#define NSL_COMPRESS	// should be sockets compressed?
 	//#define NSL_IPV6
 
 	#define NSL_SEQ_MODULO 65535
 	typedef unsigned short seqNumber;
 
-	#define MAX_PACKET_SIZE 1000
+	#define NSL_MAX_UDP_PACKET_SIZE 64000	// size of buffers for packet receiving and sending, do not set bigger then 64000
+	#define NSL_INITIAL_MAX_PACKET_SIZE 1000	// initial size of buffers for packet parsing, this will dynamically increase as needed
 
 	#define NSL_CONNECTION_FLAG_DISCONNECT 1
 	#define NSL_CONNECTION_FLAG_HANDSHAKE 2
@@ -50,10 +51,8 @@ namespace nsl {
 	#define NSL_TIMEOUT_SERVER_HANDSHAKE_KILL 5
 	#define NSL_TIMEOUT_SERVER_CONNECTED_KILL 5
 
-	#define PACKET_LOSS_RATE 30				// percentage of lost packets (simulated for debug purposes)
-
-	#define NSL_OBJECT_FLAG_ACTION_END_OF_SECTION 0
-	#define NSL_OBJECT_FLAG_ACTION_DIFF 1
+	#define NSL_OBJECT_FLAG_ACTION_DIFF 0	// diff has 0 because if the diff operation resulter in all zeros, it won't interrupt the compression
+	#define NSL_OBJECT_FLAG_ACTION_END_OF_SECTION 1
 	#define NSL_OBJECT_FLAG_ACTION_SNAPSHOT 2
 	#define NSL_OBJECT_FLAG_ACTION_DELETE 3
 	#define NSL_OBJECT_FLAG_ACTION_CREATE 4
@@ -103,4 +102,8 @@ namespace nsl {
 
 	// TODO: do dokumentace napsat, ze vsechny objekty, ktery knihovna predava, tak taky sama dealokuje
 	// TODO: pridat const kde muze byt
+
+	// TODO: zbavit se objektu na klientu po ukonceni spojeni
+	// TODO: vlastni typ atributu struktura - pripadna endianita prehodi parametry
+	// TODO: test kompresni knihovny
 };

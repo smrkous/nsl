@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
 
 	// create and launch server
 	Server server(123);
-	server.registerObjectClass(&o1);
+	server.registerObjectClass(o1);
 	server.open("12345");
 
 	// initial update
