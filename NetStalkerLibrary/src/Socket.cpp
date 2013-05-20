@@ -11,7 +11,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <netdb.h>
 #else 
 #include <Ws2tcpip.h>
 #endif
