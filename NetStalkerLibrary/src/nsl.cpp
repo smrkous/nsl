@@ -9,13 +9,17 @@
 	std::ofstream myfile;
 namespace nsl {
 	void logBytes(byte* data, unsigned int size) {
-		myfile.open (NSL_PACKET_LOG_FILENAME, std::ios::app);
-		myfile << '[' << size << "] ";
-		for (unsigned int i = 0; i < size; i++) {
-			myfile << (int)data[i] << ' ';
+		if (size > 20) {
+
+			myfile.open (NSL_PACKET_LOG_FILENAME, std::ios::app);
+			myfile << size;				// this line was added and the condition as well
+			/*myfile << "[ " << size << " ] ";
+			for (unsigned int i = 0; i < size; i++) {
+				myfile << (int)data[i] << ' ';
+			}*/
+			myfile << std::endl;
+			myfile.close();
 		}
-		myfile << "\n";
-		myfile.close();
 	}	
 
 	void logString(const char* data)

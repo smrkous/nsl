@@ -110,7 +110,7 @@ namespace nsl {
 			int finalIndex = historyBuffer->getLastSeqIndex();
 			if (index != finalIndex) {
 				index = historyBuffer->getNextValidIndex(index);
-				while (index != finalIndex && interpolationPointsCount <= NSL_INTERPOLATION_MINIMAL_DATA_COUNT) {
+				while (index != NSL_UNDEFINED_BUFFER_INDEX && interpolationPointsCount <= NSL_INTERPOLATION_MINIMAL_DATA_COUNT) {
 					if (data[index] != NULL) {
 						interpolationPoints[NSL_INTERPOLATION_MINIMAL_DATA_COUNT + interpolationPointsCount] = data[index];
 						pointTimes[NSL_INTERPOLATION_MINIMAL_DATA_COUNT + interpolationPointsCount] = historyBuffer->getTime(index);

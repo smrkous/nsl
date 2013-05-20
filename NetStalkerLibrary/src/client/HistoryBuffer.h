@@ -25,6 +25,7 @@ namespace nsl {
 			int applicationIndex;	// last index, which application already passed in time (never exceeds networkIndex)
 			int neccessaryIndexBeforeNetworkCount; // number of neccessary (cannot be deleted) indexes before networkIndex (which is neccessary always)
 			long validUpdatesCounter;
+			double lastUpdateApplicationTime;
 
 			void updateNeccessaryIndexCount(void);
 		public:
@@ -68,7 +69,7 @@ namespace nsl {
 			/// 1) seq must be awaited or must fill skipped hole after skipped seq
 			/// 2) ack must be present in buffer or eqal to seq
 			/// If new seq was pushed, firstIndexToClear and lastIndexToClear define interval of invalidated indexes
-			bool pushSeq(seqNumber seq, seqNumber ack, double, int& firstIndexToClear, int& lastIndexToClear);
+			bool pushSeq(seqNumber seq, seqNumber ack, double serverTime, int& firstIndexToClear, int& lastIndexToClear, double applicationTime);
 
 			/// finds next index, which seq data are present in buffer
 			/// if last valid index is passed to this function, NSL_UNDEFINED_BUFFER_INDEX is returned
@@ -119,6 +120,9 @@ namespace nsl {
 			/// Get index of last server ack
 			/// If history buffer is empty, NSL_UNDEFINED_BUFFER_INDEX is returned
 			int getLastAckIndex(void);
+
+			/// Get application time when last server packet was received
+			double getLastUpdateApplicationTime(void);
 		};
 
 	};

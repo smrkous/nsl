@@ -226,7 +226,7 @@ namespace nsl {
 			if (packet->stream->currentByte - packet->stream->buffer > NSL_MAX_UDP_PACKET_SIZE) {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: trying to send too much data, maximum UDP packet limits reached");
 			}
-
+			
 			socket.send(
 				connectedAddress, 
 				packet->stream->buffer, 

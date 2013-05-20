@@ -21,24 +21,31 @@ namespace nsl {
 	/* client configuration */
 
 	#define NSL_PACKET_BUFFER_SIZE 50
-	#define NSL_CUSTOM_MESSAGE_BUFFER_SIZE 50
-	#define NSL_UNDEFINED_BUFFER_INDEX -1
+	#define NSL_CUSTOM_MESSAGE_BUFFER_SIZE 200
 	#define NSL_INTERPOLATION_MINIMAL_DATA_COUNT 10		// number of indexes in buffer behind application time, which cannot be rewritten
-	#define NSL_MINIMAL_PACKET_COUNT 3					// minimal number of valid updates received to start the application ( >= 2 )
+	#define NSL_MINIMAL_PACKET_COUNT 4					// minimal number of valid updates received to start the application ( >= 2 )
 	#define NSL_INTERPOLATION_LATENCY_PACKET_COUNT 1.1	// number of snapshots, that is the application behind network updates (can be floating point number)
 	#define NSL_MAXIMAL_SPEEDUP 1.1						// maximal multiplicator of time (speed or slow) which can be used to reach optimal application time
 	#define NSL_TIME_INTERVAL_AVERAGE_COUNT 5			// number of intervals used to count average tick time (less = faster reaction but more frequent speedups/slowdowns)
 
 	/* common configuration */
 
-	#define NSL_COMPRESS	// should be sockets compressed?
+	#define NSL_COMPRESS	// should sockets be compressed?
+	//#define NSL_COMPRESSION_HIGH	// define this for higher level of compression at the cost of performance
+									// packet sizes with standard compression: ~85%, high compression: ~65% 
+									// the bigger the raw packet is, the better the compression rates are
 	//#define NSL_IPV6
 
 	#define NSL_SEQ_MODULO 65535
 	typedef unsigned short seqNumber;
 
 	#define NSL_MAX_UDP_PACKET_SIZE 64000	// size of buffers for packet receiving and sending, do not set bigger then 64000
-	#define NSL_INITIAL_MAX_PACKET_SIZE 1000	// initial size of buffers for packet parsing, this will dynamically increase as needed
+	#define NSL_INITIAL_MAX_PACKET_SIZE 2000	// initial size of buffers for packet parsing, this will dynamically increase as needed
+
+
+	/* inner constans (do not change) */
+
+	#define NSL_UNDEFINED_BUFFER_INDEX -1
 
 	#define NSL_CONNECTION_FLAG_DISCONNECT 1
 	#define NSL_CONNECTION_FLAG_HANDSHAKE 2
@@ -51,7 +58,7 @@ namespace nsl {
 	#define NSL_TIMEOUT_SERVER_HANDSHAKE_KILL 5
 	#define NSL_TIMEOUT_SERVER_CONNECTED_KILL 5
 
-	#define NSL_OBJECT_FLAG_ACTION_DIFF 0	// diff has 0 because if the diff operation resulter in all zeros, it won't interrupt the compression
+	#define NSL_OBJECT_FLAG_ACTION_DIFF 0
 	#define NSL_OBJECT_FLAG_ACTION_END_OF_SECTION 1
 	#define NSL_OBJECT_FLAG_ACTION_SNAPSHOT 2
 	#define NSL_OBJECT_FLAG_ACTION_DELETE 3
@@ -90,8 +97,12 @@ namespace nsl {
 	}
 	
 	/* debug configuration */
+
 	#define NSL_LOG_PACKETS
 	#define NSL_PACKET_LOG_FILENAME "packet_log.csv"
+
+	//#define NSL_PACKET_LOSS 0.1	// define to simulate loss of packets (you can specify probability, that packet will be lost)
+	//#define NSL_PACKET_LOSS_SEED 10	// seed for the same results across many simulations
 
 	#ifdef NSL_LOG_PACKETS
 		void logBytes(byte* data, unsigned int size);
@@ -104,6 +115,4 @@ namespace nsl {
 	// TODO: pridat const kde muze byt
 
 	// TODO: zbavit se objektu na klientu po ukonceni spojeni
-	// TODO: vlastni typ atributu struktura - pripadna endianita prehodi parametry
-	// TODO: test kompresni knihovny
 };

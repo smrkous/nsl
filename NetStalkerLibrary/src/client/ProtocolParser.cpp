@@ -25,7 +25,7 @@ namespace nsl {
 			}
 		}
 
-		void ProtocolParser::proccessUpdatePacket(BitStreamReader* stream)
+		void ProtocolParser::proccessUpdatePacket(BitStreamReader* stream, double applicationTime)
 		{
 			seqNumber seq = stream->read<Attribute<seqNumber> >();
 			seqNumber ack = stream->read<Attribute<seqNumber> >();
@@ -36,7 +36,7 @@ namespace nsl {
 			// (but data from not deleted objects must be deleted manualy)
 			int firstIndexToClear;
 			int lastIndexToClear;
-			if (!historyBuffer->pushSeq(seq, ack, time, firstIndexToClear, lastIndexToClear))
+			if (!historyBuffer->pushSeq(seq, ack, time, firstIndexToClear, lastIndexToClear, applicationTime))
 			{
 				return;
 			}

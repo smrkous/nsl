@@ -31,7 +31,7 @@ namespace nsl {
 			/// Append all custom messages from given index
 			void pushBufferedMessagesByIndex(BitStreamWriter* stream, int bufferIndex);
 
-			void proccessUpdatePacket(BitStreamReader* stream);
+			void proccessUpdatePacket(BitStreamReader* stream, double applicationTime);
 
 			/// proccess data of new object from stream
 			/// if o == NULL, new object will be created and returned via reference

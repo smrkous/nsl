@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <stdint.h>
 
+#include <iostream>
+
 namespace nsl {
 
 	/////////////////////////////////////////////////////////////////////
@@ -19,9 +21,11 @@ namespace nsl {
 	/// Typedef for abstract interpolation function
 	typedef void(*abstractInterpolationFunction)(unsigned int, byte const*const*, double const*, double, byte*);
 
-	/// Base class for all attributes
+	/// Base class for all attributes.
 	/// It is strongly recommended to use only predefined basic attributes.
-	/// However, it is possible to pass anything - it will be cast using (byte*)&value.
+	/// It is possible to pass anything - it will be cast using (byte*)&value. 
+	// The endianity difference is however resolved for the whole type (all bytes are swapped like single value), because 
+	// the inner structure is unknown to the library. Structures won't be correctly tranffered though, so don't use them.
 	template<class T>
 	class Attribute
 	{
@@ -29,12 +33,13 @@ namespace nsl {
 		/// Actual data type, which will be serialized and shared.
 		typedef T Type;
 
+		/// Interpolation function pointer type for actual type
 		typedef void(*interpolationFunction)(unsigned int, T const*const*, double const*, double, T*);
 
 		/// Return byte size of attribute
 		static unsigned int getByteSize(void) {return sizeof(T);}
 
-		/// Default interpolation function (linear). At least one point is provided always.
+		/// Default interpolation function (linear). At least one point is for the interpolation always provided.
 		static void defaultInterpolation(unsigned int pointCount, T const*const* data, double const* time, double targetTime, T* result) {
 			
 			if (pointCount == 1) {
@@ -48,6 +53,10 @@ namespace nsl {
 			while (leftIndex > 0 && time[leftIndex] > targetTime) {
 				rightIndex = leftIndex;
 				leftIndex--;
+			}
+
+			if (time[rightIndex] < targetTime) {
+				std::cout << "ex" << std::endl;
 			}
 
 			*result = *data[leftIndex] + (*data[rightIndex] - *data[leftIndex])*(targetTime-time[leftIndex])/(time[rightIndex]-time[leftIndex]);

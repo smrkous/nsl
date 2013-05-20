@@ -70,7 +70,7 @@ namespace nsl {
 			return (index + 1) % NSL_PACKET_BUFFER_SIZE;
 		}
 
-		bool HistoryBuffer::pushSeq(seqNumber seq, seqNumber ack, double time, int& firstIndexToClear, int& lastIndexToClear)
+		bool HistoryBuffer::pushSeq(seqNumber seq, seqNumber ack, double time, int& firstIndexToClear, int& lastIndexToClear, double applicationTime)
 		{
 			// is ack missing in buffer?
 			if (ack != seq && (!isSeqInBounds(ack) || !isIndexValid(seqToIndex(ack)))) {
@@ -118,6 +118,7 @@ namespace nsl {
 
 				updateNeccessaryIndexCount();
 				validUpdatesCounter++;
+				lastUpdateApplicationTime = applicationTime;
 				return true;
 
 			// if seq was skipped, is there a hole it fills?
@@ -296,5 +297,9 @@ namespace nsl {
 			return networkAckIndex;
 		}
 
+		double HistoryBuffer::getLastUpdateApplicationTime(void)
+		{
+			return lastUpdateApplicationTime;
+		}
 	};
 };

@@ -26,6 +26,9 @@ namespace nsl {
 		if (socketOpenCounter++ == 0) {
 			initializeSockets();
 		}
+#ifdef NSL_PACKET_LOSS && NSL_PACKET_LOSS_SEED
+		srand(NSL_PACKET_LOSS_SEED);
+#endif
 	}
 
 	Socket::~Socket(void)
@@ -106,17 +109,17 @@ namespace nsl {
 			throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: cannot bind address to socket.");
 		}
 
-		#ifdef NSL_LOG_PACKETS
-			char* host, *port2;
-			Address address;
-			memcpy(&(address.address), rp->ai_addr, rp->ai_addrlen);
-			address.length = rp->ai_addrlen;
-			getStringsFromAddress(address, host, port2);
-			logString(host);
-			logString(":");
-			logString(port);
-			logString("\n");
-		#endif
+#ifdef NSL_LOG_PACKETS
+		char* host, *port2;
+		Address address;
+		memcpy(&(address.address), rp->ai_addr, rp->ai_addrlen);
+		address.length = rp->ai_addrlen;
+		getStringsFromAddress(address, host, port2);
+		logString(host);
+		logString(":");
+		logString(port);
+		logString("\n");
+#endif
 
 		freeaddrinfo(result);
 		opened = true;
@@ -149,16 +152,25 @@ namespace nsl {
 		if (size == 0) {
 			throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: zero size of sent data");
 		}
+
+#ifdef NSL_PACKET_LOSS
+		if (rand()%100 < (unsigned int)(NSL_PACKET_LOSS*100)) {
+			std::cout << "packet lost!" << std::endl;
+			return true;
+		} else {
+			std::cout << "sending..." << std::endl;
+		}
+#endif
 		
-		#ifdef NSL_LOG_PACKETS
-			char* host, *port;
-			getStringsFromAddress(address, host, port);
-			logString(host);
-			logString(":");
-			logString(port);
-			logString(" ");
-			logBytes((byte*)data, size);
-		#endif
+#ifdef NSL_LOG_PACKETS
+		char* host, *port;
+		getStringsFromAddress(address, host, port);
+		logString(host);
+		logString(":");
+		logString(port);
+		logString(" ");
+		logBytes((byte*)data, size);
+#endif
 
 		return size == sendto(socketId, (const char*)data, size, 0, (struct sockaddr *) &(address.address), address.length);
     }

@@ -68,7 +68,7 @@ namespace nsl {
 			BitStreamReader* stream = connection.receive();
 			try {
 				while (stream != NULL) {
-					protocolParser.proccessUpdatePacket(stream);
+					protocolParser.proccessUpdatePacket(stream, currentTime);
 					stream = connection.receive();
 				}
 			} catch (Exception e) {
@@ -87,8 +87,10 @@ namespace nsl {
 
 				// count optimal application time
 				double averageTickDuration = historyBuffer.getAverageTimeInterval(NSL_TIME_INTERVAL_AVERAGE_COUNT);
-
-				double optimalApplicationTime = historyBuffer.getTime(historyBuffer.getLastSeqIndex()) - NSL_INTERPOLATION_LATENCY_PACKET_COUNT * averageTickDuration;
+				double optimalApplicationTime = 
+					historyBuffer.getTime(historyBuffer.getLastSeqIndex()) 
+					- NSL_INTERPOLATION_LATENCY_PACKET_COUNT * averageTickDuration
+					+ currentTime - historyBuffer.getLastUpdateApplicationTime();
 
 				// if this is first application update, find first index to start and set first timeOverlap
 				bool isFirst = false;
@@ -119,7 +121,7 @@ namespace nsl {
 				}
 
 				int targetApplicationIndex = historyBuffer.getApplicationIndex();
-
+				
 				// if this is not first update, index must be shifted, because current index has been already proccessed in previous update
 				if (!isFirst) {
 					if (currentApplicationIndex == targetApplicationIndex) {
@@ -130,7 +132,7 @@ namespace nsl {
 				}
 
 				objectManager.applicationUpdate(currentApplicationIndex, targetApplicationIndex, userObject, updateTime);
-
+				
 				objectManager.deleteOldObjects();	// TODO: more effective would be calling this before applicationUpdate
 			}
 			
