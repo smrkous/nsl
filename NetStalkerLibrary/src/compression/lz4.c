@@ -35,6 +35,11 @@
 Note : this source file requires "lz4_encoder.h" and "lz4_decoder.h"
 */
 
+/*
+Note2 : this source file was modified by Petr Smrcek 21.5.2013
+The modification is clearly marked
+*/
+
 //**************************************
 // Tuning parameters
 //**************************************
@@ -69,9 +74,12 @@ Note : this source file requires "lz4_encoder.h" and "lz4_decoder.h"
 #  define LZ4_ARCH64 0
 #endif
 
+//////////////////////////////////////// Modification from Petr Smrcek 21.5.2013
+// Little / Big endian recognition commented, because little endian compression is required always
+
 // Little Endian or Big Endian ?
 // Overwrite the #define below if you know your architecture endianess
-#if defined (__GLIBC__)
+/*#if defined (__GLIBC__)
 #  include <endian.h>
 #  if (__BYTE_ORDER == __BIG_ENDIAN)
 #     define LZ4_BIG_ENDIAN 1
@@ -83,9 +91,9 @@ Note : this source file requires "lz4_encoder.h" and "lz4_decoder.h"
    || defined(__hpux)  || defined(__hppa) \
    || defined(_MIPSEB) || defined(__s390__)
 #  define LZ4_BIG_ENDIAN 1
-#else
+#else*/
 // Little Endian assumed. PDP Endian and other very rare endian format are unsupported.
-#endif
+//#endif
 
 // Unaligned memory access is automatically enabled for "common" CPU, such as x86.
 // For others CPU, the compiler will be more cautious, and insert extra code to ensure aligned access is respected

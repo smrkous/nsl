@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2013 Petr Smrcek
+ * This file is originally a part of the Net Stalker Library
+ * For conditions of distribution and use, see copyright notice in nsl.h
+ */
+
 #pragma once
 
 #include "../include/nsl.h"

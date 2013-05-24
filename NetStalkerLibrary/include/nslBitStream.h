@@ -1,7 +1,8 @@
-/* 
-	nslBitStream.h
-	Contains classes and constructs required for serializing and deserializing custom attributes.
-*/
+/* nslBitStream.h - classes and constructs required for serializing and deserializing custom attributes
+ * Copyright (C) 2013 Petr Smrcek
+ * This file is originally a part of the Net Stalker Library
+ * For conditions of distribution and use, see copyright notice in nsl.h
+ */
 
 #pragma once
 

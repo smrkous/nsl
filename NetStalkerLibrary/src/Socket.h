@@ -1,21 +1,23 @@
+/*
+ * Copyright (C) 2013 Petr Smrcek
+ * This file is originally a part of the Net Stalker Library
+ * For conditions of distribution and use, see copyright notice in nsl.h
+ */
+
 #pragma once
 
 #include "configuration.h"
 
 #ifdef NSL_PLATFORM_WINDOWS
-
 	#include <winsock2.h>
 	#pragma comment( lib, "ws2_32.lib" )
 	typedef int socklen_t;
-
 #else
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fcntl.h>
-#include <netdb.h>
-
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <fcntl.h>
+	#include <netdb.h>
 #endif
 
 #include <assert.h>

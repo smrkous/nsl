@@ -1,6 +1,33 @@
-/* 
-	nsl.h
-	Base library file containing common essential definitions.
+/*
+   Net Stalker Library - Library for low latency environment transfer
+   Copyright (C) 2013 Petr Smrcek
+   BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are
+   met:
+
+       * Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+       * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the following disclaimer
+   in the documentation and/or other materials provided with the
+   distribution.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+   You can contact the author at :
+   - NSL source repository : https://github.com/smrkous/nsl
 */
 
 #pragma once
@@ -34,7 +61,7 @@ namespace nsl {
 
 	/* Endianity recognition */
 	// Overwrite the #define below if you know your architecture endianess
-	//Tthis part of code (endianity recognition) was taken from lz4/lz4.c, the licence is in that file
+	// This part of code (endianity recognition) was taken from lz4.c, the licence is in that file
 	#if defined (__GLIBC__)
 	#  include <endian.h>
 	#  if (__BYTE_ORDER == __BIG_ENDIAN)
@@ -51,23 +78,6 @@ namespace nsl {
 	#define NSL_LITTLE_ENDIAN
 	// Little Endian assumed. PDP Endian and other very rare endian format are unsupported.
 	#endif
-	/*
-	#if !defined(NSL_BIG_ENDIAN) && !defined(NSL_LITTLE_ENDIAN)
-		#if defined(__BYTE_ORDER__)
-			#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-				#define NSL_LITTLE_ENDIAN
-			#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-				#define NSL_BIG_ENDIAN
-			#endif
-		#elif defined(_M_IX86) || defined(i386)
-			#define NSL_LITTLE_ENDIAN
-		#elif defined(__ppc__) || defined(__powerpc__) || defined (PPC)
-			#define NSL_BIG_ENDIAN
-		#else
-			#error "NSL: Endianity not recognized, must be specified manualy by defining macros NSL_BIG_ENDIAN or NSL_LITTLE_ENDIAN"
-		#endif
-	#endif
-	*/
 
 	/// Basic raw data unit - for custom data definitions
 	typedef unsigned char byte;

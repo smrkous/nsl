@@ -1,9 +1,14 @@
+/*
+ * Copyright (C) 2013 Petr Smrcek
+ * This file is originally a part of the Net Stalker Library
+ * For conditions of distribution and use, see copyright notice in nsl.h
+ */
+
 #include "Connection.h"
 #include "../../include/nslBitStream.h"
 #if !defined NSL_PLATFORM_WINDOWS
 #include <arpa/inet.h>
 #endif
-
 
 namespace nsl {
 	namespace client {

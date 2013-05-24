@@ -1,7 +1,8 @@
-/* 
-	nslReflection.h
-	Contains classes and constructs required for object class and attribute definition.
-*/
+/* nslReflection.h - classes and constructs required for object class and attribute definition
+ * Copyright (C) 2013 Petr Smrcek
+ * This file is originally a part of the Net Stalker Library
+ * For conditions of distribution and use, see copyright notice in nsl.h
+ */
 
 #pragma once
 

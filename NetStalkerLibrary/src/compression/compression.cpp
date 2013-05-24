@@ -1,8 +1,14 @@
+/*
+ * Copyright (C) 2013 Petr Smrcek
+ * This file is originally a part of the Net Stalker Library
+ * For conditions of distribution and use, see copyright notice in nsl.h
+ */
+
 #include "compression.h"
-#include "lz4.h"
-//#include "rle.h"
 #ifdef NSL_COMPRESSION_HIGH
 #include "zlib/zlib.h"
+#else
+#include "lz4.h"
 #endif
 
 namespace nsl {
@@ -17,12 +23,8 @@ namespace nsl {
 			return 0;
 		}
 #else
-		//return LZ4_compress_limitedOutput((const char*)src, (char*)dest, srclen, destlen);
+		return LZ4_compress_limitedOutput((const char*)src, (char*)dest, srclen, destlen);
 #endif
-		//return RLE_Compress(src, dest, srclen);
-		memcpy(dest, src, srclen); return srclen;
-
-		
 	}
 
 	unsigned int decompress(byte* src, byte* dest, unsigned int srclen, unsigned int destlen)
@@ -36,9 +38,7 @@ namespace nsl {
 			return 0;
 		}
 #else
-		//return LZ4_decompress_safe((const char *)src, (char *)dest, srclen, destlen);
+		return LZ4_decompress_safe((const char *)src, (char *)dest, srclen, destlen);
 #endif
-		//return RLE_Uncompress(src, dest, srclen, destlen);
-		memcpy(dest, src, srclen); return srclen;
 	}
 };

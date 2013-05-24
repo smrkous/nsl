@@ -1,7 +1,8 @@
-/* 
-	Server.h
-	Classes and constructs for building the server side of the connection.
-*/
+/* Server.h - classes and constructs required for object class and attribute definition
+ * Copyright (C) 2013 Petr Smrcek
+ * This file is originally a part of the Net Stalker Library
+ * For conditions of distribution and use, see copyright notice in nsl.h
+ */
 
 #pragma once
 
