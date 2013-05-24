@@ -206,7 +206,6 @@ namespace nsl {
 				}
 
 				packet->send();
-				delete packet;
 			}
 		}
 
