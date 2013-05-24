@@ -39,7 +39,6 @@ namespace nsl {
 			std::vector<std::pair<BitStreamWriter*, bool> > newCustomMessages;	// message stream and reliability are stored
 
 			ProtocolParser protocolParser;
-
 		public:
 			ClientImpl(Client* userObject, unsigned short applicationId);
 

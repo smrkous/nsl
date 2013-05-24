@@ -26,6 +26,9 @@ namespace nsl {
 			CustomMessageBuffer(void);
 			~CustomMessageBuffer(void);
 			
+			/// resets class to original state
+			void reset(void);
+
 			/// seq -> buffer index conversion
 			/// if seq is not within current buffer bounds, result is undefined
 			int seqToIndex(seqNumber); 

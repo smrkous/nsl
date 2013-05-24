@@ -28,6 +28,18 @@ namespace nsl {
 		{
 		}
 
+		void HistoryBuffer::reset(void)
+		{
+			std::fill( validData, validData + sizeof( validData ), false );
+			lastSeq = 0;
+			validUpdatesCounter = 0;
+			networkIndex = NSL_UNDEFINED_BUFFER_INDEX;
+			networkAckIndex = NSL_UNDEFINED_BUFFER_INDEX;
+			firstDataIndex = NSL_UNDEFINED_BUFFER_INDEX;
+			applicationIndex = NSL_UNDEFINED_BUFFER_INDEX;
+			neccessaryIndexBeforeNetworkCount = 0;
+		}
+
 		bool HistoryBuffer::isEmpty(void)
 		{
 			return validUpdatesCounter < 1;

@@ -25,13 +25,16 @@ namespace nsl {
 
 		ClientImpl::~ClientImpl(void)
 		{
-			close();
+			connection.close();
 		}
 
 		void ClientImpl::close(void) 
 		{
 			connection.close();
 			lastConnectionState = CLOSED;
+			objectManager.reset();
+			historyBuffer.reset();
+			customMessageBuffer.reset();
 		}
 
 		void ClientImpl::open(const char* address, const char* port, const char* clientPort)
@@ -58,6 +61,7 @@ namespace nsl {
 			// check connection status and try to connect / handshake, if neccessary
 			lastConnectionState = connection.update(currentTime);
 			if (lastConnectionState == CLOSED) {
+				close();
 				throw Exception(NSL_EXCEPTION_DISCONNECTED, "NSL: connection closed.");
 			}
 			
@@ -79,8 +83,7 @@ namespace nsl {
 				}
 			} catch (Exception e) {
 				if (e.getCode() == NSL_EXCEPTION_DISCONNECTED) {
-					connection.close();
-					lastConnectionState = CLOSED;
+					close();
 				}
 				throw e;
 			}
@@ -146,6 +149,7 @@ namespace nsl {
 			// disconnect could have occured during proccessing incomming messages
 			lastConnectionState = connection.update(currentTime);
 			if (lastConnectionState == CLOSED) {
+				close();
 				throw Exception(NSL_EXCEPTION_DISCONNECTED, "NSL: not connected.");
 			}
 
@@ -184,9 +188,9 @@ namespace nsl {
 						// append data to stream
 						unsigned int size;
 						byte* data = it->first->toBytes(size);
-						if (size > NSL_MAX_CUSTOM_MESSAGE_SIZE) {
+						/*if (size > NSL_MAX_CUSTOM_MESSAGE_SIZE) {
 							throw Exception(NSL_EXCEPTION_USAGE_ERROR, "NSL: maximal custom message size exceeded");
-						}
+						}*/ //Cannot happen, buffer has limited size
 						stream->write<Attribute<customMessageSizeNumber> >(size);
 						stream->write(size, data);
 
@@ -202,12 +206,13 @@ namespace nsl {
 				}
 
 				packet->send();
+				delete packet;
 			}
 		}
 
 		BitStreamWriter* ClientImpl::createCustomMessage(bool reliable)
 		{
-			BitStreamWriter* stream = new BitStreamWriter();
+			BitStreamWriter* stream = new BitStreamWriter(NSL_MAX_CUSTOM_MESSAGE_SIZE, true);
 			newCustomMessages.push_back(std::pair<BitStreamWriter*, bool>(stream, reliable));
 			return stream;
 		}

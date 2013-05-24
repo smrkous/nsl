@@ -51,8 +51,7 @@ namespace nsl {
 		NetworkObject* ServerImpl::createObject(unsigned int classId, BitStreamWriter*& creationMetaData)
 		{
 			NetworkObject* o = objectManager.createObject(classId, &historyBuffer);
-			byte* data = new byte[NSL_MAX_CUSTOM_MESSAGE_SIZE];
-			creationMetaData = new BitStreamWriter(data, NSL_MAX_CUSTOM_MESSAGE_SIZE);
+			creationMetaData = new BitStreamWriter(NSL_MAX_CUSTOM_MESSAGE_SIZE, true);
 			unproccessedCreationCustomMessages.insert(std::pair<unsigned int, BitStreamWriter*>(o->getId(), creationMetaData));
 			return o;
 		}

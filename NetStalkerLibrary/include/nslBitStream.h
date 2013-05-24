@@ -132,6 +132,7 @@ namespace nsl {
 		bool externalBuffer; // is inner buffer external or created in constructor (and should be deleted)
 		byte* currentByte;	// the first byte with at least 1 available bit
 		unsigned char bitOffset; // the first free bit in a byte (0-7)
+		bool limitedSize;
 
 		bool isSpaceFor(unsigned int bitCount);
 		void expand(unsigned int bitCount);
@@ -144,9 +145,10 @@ namespace nsl {
 		NSL_IMPORT_EXPORT
 		BitStreamWriter(void);
 
-		/// Creates BitStream with internal buffer, which is automatically resized if needed
+		/// Creates BitStream with internal buffer
+		/// If limited size is false, buffer automatically resizes if needed
 		NSL_IMPORT_EXPORT
-		BitStreamWriter(unsigned int initialSize);
+		BitStreamWriter(unsigned int initialSize, bool limitedSize = false);
 
 		/// Creates BitStream operating over external buffer - if the buffer should overflow, exception is thrown
 		NSL_IMPORT_EXPORT

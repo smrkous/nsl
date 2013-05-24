@@ -16,15 +16,17 @@ namespace nsl {
 		this->bitOffset = 0;
 		this->externalBuffer = false;
 		this->currentByte = this->buffer;
+		this->limitedSize = false;
 	}
 
-	BitStreamWriter::BitStreamWriter(unsigned int initialSize)
+	BitStreamWriter::BitStreamWriter(unsigned int initialSize, bool limitedSize)
 	{
 		this->buffer = new byte[initialSize];
 		this->bufferLength = initialSize;
 		this->bitOffset = 0;
 		this->externalBuffer = false;
 		this->currentByte = this->buffer;
+		this->limitedSize = limitedSize;
 	}
 
 	BitStreamWriter::BitStreamWriter(byte* data, unsigned int dataSize)
@@ -34,6 +36,7 @@ namespace nsl {
 		this->bitOffset = 0;
 		this->externalBuffer = true;
 		this->currentByte = data;
+		this->limitedSize = true;
 	}
 
 	BitStreamWriter::~BitStreamWriter(void)
@@ -134,6 +137,8 @@ namespace nsl {
 		if (!isSpaceFor(bitCount)) {
 			if (this->externalBuffer) {
 				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "External buffer overflowed");
+			} else if (this->limitedSize) {
+				throw Exception(NSL_EXCEPTION_USAGE_ERROR, "Maximum allowed buffer size exceeded");
 			} else {
 				expand(bitCount);
 			}

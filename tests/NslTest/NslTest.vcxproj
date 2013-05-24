@@ -100,7 +100,6 @@
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\lz4.h" />
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\lz4_decoder.h" />
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\lz4_encoder.h" />
-    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\rle.h" />
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\crc32.h" />
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\deflate.h" />
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\gzguts.h" />
@@ -139,7 +138,6 @@
     <ClCompile Include="..\..\NetStalkerLibrary\src\client\ProtocolParser.cpp" />
     <ClCompile Include="..\..\NetStalkerLibrary\src\compression\compression.cpp" />
     <ClCompile Include="..\..\NetStalkerLibrary\src\compression\lz4.c" />
-    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\rle.c" />
     <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\adler32.c" />
     <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\compress.c" />
     <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\crc32.c" />

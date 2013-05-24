@@ -20,6 +20,15 @@ namespace nsl {
 
 		}
 
+		void CustomMessageBuffer::reset(void)
+		{
+			currentIndex = NSL_UNDEFINED_BUFFER_INDEX;
+			ackIndex = NSL_UNDEFINED_BUFFER_INDEX;
+			for (unsigned int i = 0; i < NSL_CUSTOM_MESSAGE_BUFFER_SIZE; i++) {
+				bufferedMessages[i].clear();
+			}
+		}
+
 		int CustomMessageBuffer::seqToIndex(seqNumber seq)
 		{
 			return (currentIndex - ((currentSeq - seq + NSL_SEQ_MODULO) % NSL_SEQ_MODULO) + NSL_CUSTOM_MESSAGE_BUFFER_SIZE) % NSL_CUSTOM_MESSAGE_BUFFER_SIZE;

@@ -16,7 +16,8 @@ namespace nsl {
 			
 		id = userObject.id;
 		attributeCount = userObject.attributeMaxId + 1;	// if there are any ids skipped, space will be wasted
-		attributes = new AttributeDefinition*[attributeCount];
+		attributes = new AttributeDefinition*[attributeCount]();
+
 		offsets = new unsigned int[attributeCount];
 			
 		std::vector<AttributeDefinition>::iterator it;

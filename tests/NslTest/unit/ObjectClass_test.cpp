@@ -6,16 +6,16 @@
 
 TEST(ObjectClass_Unit, defineClass) {
 	enum nslTestIds {
-		//DUMMY_1,
+		DUMMY_1,
 		ATTRIBUTE_1,
 		ATTRIBUTE_2,
 		ATTRIBUTE_3,
-		//DUMMY_2,
+		DUMMY_2,
 		ATTRIBUTE_4,
 		ATTRIBUTE_5,
 		ATTRIBUTE_6,
-		//DUMMY_3,
-		//DUMMY_4,
+		DUMMY_3,
+		DUMMY_4,
 		ATTRIBUTE_7,
 		OBJECT_ID
 	};
@@ -30,7 +30,7 @@ TEST(ObjectClass_Unit, defineClass) {
 	oc.defineAttribute<nsl::int16>(nslTestIds::ATTRIBUTE_7);
 
 	nsl::ObjectClassDefinition ocd(oc);
-	EXPECT_EQ(7, ocd.getAttributeCount());
+	EXPECT_EQ(11, ocd.getAttributeCount());
 	EXPECT_EQ(nslTestIds::OBJECT_ID, ocd.getId());
 	
 	EXPECT_EQ(0, ocd.getDataOffset(nslTestIds::ATTRIBUTE_1));

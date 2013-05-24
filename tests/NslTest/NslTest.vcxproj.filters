@@ -75,9 +75,6 @@
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\compression.h">
       <Filter>NetStalkerLibrary\src\compression</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\rle.h">
-      <Filter>NetStalkerLibrary\src\compression</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\NetStalkerLibrary\src\compression\lz4.h">
       <Filter>NetStalkerLibrary\src\compression</Filter>
     </ClInclude>
@@ -207,9 +204,6 @@
       <Filter>NetStalkerLibrary\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\NetStalkerLibrary\src\compression\compression.cpp">
-      <Filter>NetStalkerLibrary\src\compression</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\rle.c">
       <Filter>NetStalkerLibrary\src\compression</Filter>
     </ClCompile>
     <ClCompile Include="..\..\NetStalkerLibrary\src\compression\lz4.c">

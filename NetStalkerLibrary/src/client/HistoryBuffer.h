@@ -38,6 +38,9 @@ namespace nsl {
 			HistoryBuffer(void);
 			~HistoryBuffer(void);
 
+			/// resets class to original state
+			void reset(void);
+
 			/// has no seq been received yet?
 			bool isEmpty(void);
 

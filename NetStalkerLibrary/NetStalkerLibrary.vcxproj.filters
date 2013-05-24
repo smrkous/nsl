@@ -97,9 +97,6 @@
     <ClCompile Include="src\compression\compression.cpp">
       <Filter>src\compression</Filter>
     </ClCompile>
-    <ClCompile Include="src\compression\rle.c">
-      <Filter>src\compression</Filter>
-    </ClCompile>
     <ClCompile Include="src\compression\lz4.c">
       <Filter>src\compression</Filter>
     </ClCompile>
@@ -217,9 +214,6 @@
       <Filter>src\client</Filter>
     </ClInclude>
     <ClInclude Include="src\compression\compression.h">
-      <Filter>src\compression</Filter>
-    </ClInclude>
-    <ClInclude Include="src\compression\rle.h">
       <Filter>src\compression</Filter>
     </ClInclude>
     <ClInclude Include="src\compression\lz4.h">

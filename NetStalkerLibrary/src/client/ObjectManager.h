@@ -35,6 +35,9 @@ namespace nsl {
 			ObjectManager(HistoryBuffer*);
 			~ObjectManager(void);
 
+			/// resets class to original state
+			void reset(void);
+
 			// manage scheduled actions
 			// if firstIndexToProccess == NSL_UNDEFINED_BUFFER_INDEX, no indexes should be updated
 			void applicationUpdate(int firstIndexToProccess, int lastIndexToProccess, Client* userObject, double time);		

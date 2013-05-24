@@ -27,6 +27,18 @@ namespace nsl {
 
 		}
 
+		void ObjectManager::reset(void)
+		{
+			for (unsigned int i = 0; i < NSL_PACKET_BUFFER_SIZE; i++) {
+				objectsInPacket[i].clear();
+			}
+			for (std::map<unsigned int, NetworkObject*>::iterator it = objectsBegin(); it != objectsEnd(); it++) {
+				NetworkObject* o = it->second;
+				objects.erase(it);
+				delete o;
+			}
+		}
+
 		void ObjectManager::registerObjectClass(ObjectClassDefinition* objectClass)
 		{
 			objectClasses.insert(std::pair<unsigned int, ObjectClassDefinition*>(objectClass->getId(), objectClass));
