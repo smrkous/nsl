@@ -55,10 +55,6 @@ namespace nsl {
 				leftIndex--;
 			}
 
-			if (time[rightIndex] < targetTime) {
-				std::cout << "ex" << std::endl;
-			}
-
 			*result = *data[leftIndex] + (*data[rightIndex] - *data[leftIndex])*(targetTime-time[leftIndex])/(time[rightIndex]-time[leftIndex]);
 		}
 

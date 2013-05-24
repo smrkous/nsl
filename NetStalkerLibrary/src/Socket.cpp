@@ -154,10 +154,7 @@ namespace nsl {
 
 #ifdef NSL_PACKET_LOSS
 		if (rand()%100 < (unsigned int)(NSL_PACKET_LOSS*100)) {
-			std::cout << "packet lost!" << std::endl;
 			return true;
-		} else {
-			std::cout << "sending..." << std::endl;
 		}
 #endif
 		
@@ -188,6 +185,7 @@ namespace nsl {
 			return 0;
 		}   
 
+		return read_bytes;
 	}
 
 	bool Socket::getStringsFromAddress(const Address address, char* &hostResult, char* &serviceResult)

@@ -21,10 +21,10 @@ namespace nsl {
 	/* client configuration */
 
 	#define NSL_PACKET_BUFFER_SIZE 50
-	#define NSL_CUSTOM_MESSAGE_BUFFER_SIZE 200
+	#define NSL_CUSTOM_MESSAGE_BUFFER_SIZE 150
 	#define NSL_INTERPOLATION_MINIMAL_DATA_COUNT 10		// number of indexes in buffer behind application time, which cannot be rewritten
 	#define NSL_MINIMAL_PACKET_COUNT 4					// minimal number of valid updates received to start the application ( >= 2 )
-	#define NSL_INTERPOLATION_LATENCY_PACKET_COUNT 1.1	// number of snapshots, that is the application behind network updates (can be floating point number)
+	#define NSL_INTERPOLATION_LATENCY_PACKET_COUNT 2.1	// number of snapshots, that is the application behind network updates (can be floating point number)
 	#define NSL_MAXIMAL_SPEEDUP 1.1						// maximal multiplicator of time (speed or slow) which can be used to reach optimal application time
 	#define NSL_TIME_INTERVAL_AVERAGE_COUNT 5			// number of intervals used to count average tick time (less = faster reaction but more frequent speedups/slowdowns)
 
@@ -98,11 +98,11 @@ namespace nsl {
 	
 	/* debug configuration */
 
-	#define NSL_LOG_PACKETS
+	//#define NSL_LOG_PACKETS
 	#define NSL_PACKET_LOG_FILENAME "packet_log.csv"
 
 	//#define NSL_PACKET_LOSS 0.1	// define to simulate loss of packets (you can specify probability, that packet will be lost)
-	//#define NSL_PACKET_LOSS_SEED 10	// seed for the same results across many simulations
+	//#define NSL_PACKET_LOSS_SEED 9	// seed for the same results across many simulations
 
 	#ifdef NSL_LOG_PACKETS
 		void logBytes(byte* data, unsigned int size);

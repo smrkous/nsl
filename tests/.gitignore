@@ -1,0 +1,6 @@
+# Project cache and compile files and folders
+NetStalkerLibrary
+gtest-1.6.0/msvc/*.suo
+gtest-1.6.0/msvc/*.sdf
+gtest-1.6.0/msvc/gtest
+gtest-1.6.0/msvc/_UpgradeReport_Files

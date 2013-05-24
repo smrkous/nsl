@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="NetStalkerLibrary">
+      <UniqueIdentifier>{4b1308b9-7364-4bf0-9415-133736ae0275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetStalkerLibrary\include">
+      <UniqueIdentifier>{99648ad7-1a33-4a75-86a6-e81ab1d442e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetStalkerLibrary\src">
+      <UniqueIdentifier>{9dc21f49-ec9c-4bdf-abc7-55a251512cc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetStalkerLibrary\src\server">
+      <UniqueIdentifier>{0343d23b-3120-4f33-83c3-1aea99d30e11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetStalkerLibrary\src\client">
+      <UniqueIdentifier>{f119cee6-6ca8-404d-9634-408dd00f298c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetStalkerLibrary\src\compression">
+      <UniqueIdentifier>{2e7288ed-1a6a-478f-94db-9f1cc86dd48d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\unit">
+      <UniqueIdentifier>{c69a6142-9dde-4ba5-bf7b-ee111b36327e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetStalkerLibrary\src\compression\zlib">
+      <UniqueIdentifier>{7fc5daa6-e3e7-4ab1-9119-adf01d6c7629}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\include\nslReflection.h">
+      <Filter>NetStalkerLibrary\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\include\nslServer.h">
+      <Filter>NetStalkerLibrary\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\include\nslClient.h">
+      <Filter>NetStalkerLibrary\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\include\nslBitStream.h">
+      <Filter>NetStalkerLibrary\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\include\nsl.h">
+      <Filter>NetStalkerLibrary\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\configuration.h">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\Socket.h">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\ObjectClassDefinition.h">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\compression.h">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\rle.h">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\lz4.h">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\lz4_encoder.h">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\lz4_decoder.h">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\zlib.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\zconf.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\gzguts.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\zutil.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\deflate.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\crc32.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\inffixed.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\inffast.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\inftrees.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\trees.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\compression\zlib\inflate.h">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\server\Connection.h">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\server\ProtocolParser.h">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\server\ServerImpl.h">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\server\NetworkObject.h">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\server\ObjectManager.h">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\server\Peer.h">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\server\HistoryBuffer.h">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\client\ProtocolParser.h">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\client\HistoryBuffer.h">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\client\Connection.h">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\client\ClientImpl.h">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\client\NetworkObject.h">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\client\ObjectManager.h">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\NetStalkerLibrary\src\client\CustomMessageBuffer.h">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NslTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\Socket_test.cpp">
+      <Filter>Source Files\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\ClientHistoryBuffer_test.cpp">
+      <Filter>Source Files\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\BitStreamReader_test.cpp">
+      <Filter>Source Files\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\BitStreamWriter_test.cpp">
+      <Filter>Source Files\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\ObjectClass_test.cpp">
+      <Filter>Source Files\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\ClientProtocolParser_test.cpp">
+      <Filter>Source Files\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="unit\ServerProtocolParser_test.cpp">
+      <Filter>Source Files\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\Socket.cpp">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\nsl.cpp">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\ObjectClassDefinition.cpp">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\BitStreamWriter.cpp">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\BitStreamReader.cpp">
+      <Filter>NetStalkerLibrary\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\compression.cpp">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\rle.c">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\lz4.c">
+      <Filter>NetStalkerLibrary\src\compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\deflate.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\inftrees.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\gzwrite.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\gzlib.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\gzread.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\inffast.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\compress.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\infback.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\inflate.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\trees.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\uncompr.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\zutil.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\crc32.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\adler32.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\compression\zlib\gzclose.c">
+      <Filter>NetStalkerLibrary\src\compression\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\Connection.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\ProtocolParser.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\ServerImpl.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\Server.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\ObjectManager.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\NetworkObject.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\UserPeer.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\Peer.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\ServerObject.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\server\HistoryBuffer.cpp">
+      <Filter>NetStalkerLibrary\src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\ProtocolParser.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\HistoryBuffer.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\ClientImpl.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\Connection.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\NetworkObject.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\ObjectManager.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\Client.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\CustomMessageBuffer.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NetStalkerLibrary\src\client\ClientObject.cpp">
+      <Filter>NetStalkerLibrary\src\client</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

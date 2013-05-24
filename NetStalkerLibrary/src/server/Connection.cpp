@@ -71,7 +71,7 @@ namespace nsl {
 			Address sender;
 			unsigned int size;
 			while (size = socket.receive(sender,buffer,NSL_MAX_UDP_PACKET_SIZE)) {
-
+				
 				// check first 6 bytes for application and connection id
 				if (size < 6) {
 					continue;
@@ -84,7 +84,7 @@ namespace nsl {
 				}
 
 				int connectionId = stream->read<uint32>();
-
+				
 				// new connection
 				if (connectionId == 0) {
 					peer = new PeerConnection(++lastConnectionId, sender);

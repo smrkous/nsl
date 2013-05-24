@@ -17,10 +17,10 @@ namespace nsl {
 			return 0;
 		}
 #else
-		return LZ4_compress_limitedOutput((const char*)src, (char*)dest, srclen, destlen);
+		//return LZ4_compress_limitedOutput((const char*)src, (char*)dest, srclen, destlen);
 #endif
 		//return RLE_Compress(src, dest, srclen);
-		//memcpy(dest, src, srclen); return srclen;
+		memcpy(dest, src, srclen); return srclen;
 
 		
 	}
@@ -36,9 +36,9 @@ namespace nsl {
 			return 0;
 		}
 #else
-		return LZ4_decompress_safe((const char *)src, (char *)dest, srclen, destlen);
+		//return LZ4_decompress_safe((const char *)src, (char *)dest, srclen, destlen);
 #endif
 		//return RLE_Uncompress(src, dest, srclen, destlen);
-		//memcpy(dest, src, srclen); return srclen;
+		memcpy(dest, src, srclen); return srclen;
 	}
 };
